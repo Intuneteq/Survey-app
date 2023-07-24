@@ -192,7 +192,7 @@ const TMP_SURVEY = [
     },
 ];
 
-type Survey = (typeof TMP_SURVEY)[number];
+export type Survey = (typeof TMP_SURVEY)[number];
 
 // App state type (the user)
 type AppState = {

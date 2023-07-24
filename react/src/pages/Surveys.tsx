@@ -1,13 +1,25 @@
+import SurveyListItem from "../components/molecules/SurveyListItem";
 import PageComponent from "../components/organisms/PageComponent";
-import { useAppHook } from "../contexts/AppContext";
+import { Survey, useAppHook } from "../contexts/AppContext";
 
 const Surveys = () => {
     const { surveys } = useAppHook();
-    console.log(surveys);
-    
+
+    const onDeleteClick = () => {
+        console.log("survey delete");
+    };
+
     return (
         <PageComponent title="Surveys">
-            {/* {surveys.map(survey)} */}
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
+                {surveys.map((survey: Survey) => (
+                    <SurveyListItem
+                        key={survey.id}
+                        survey={survey}
+                        onDeleteClick={onDeleteClick}
+                    />
+                ))}
+            </div>
         </PageComponent>
     );
 };
