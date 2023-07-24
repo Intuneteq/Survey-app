@@ -9,6 +9,7 @@ import {
 // User Type
 type User = {
     name: string;
+    email: string;
     avatar: string;
 };
 
@@ -20,7 +21,11 @@ type AppState = {
 
 // Initial app state for the reducer
 export const initState: AppState = {
-    user: { name: "", avatar: "" },
+    user: {
+        name: "Tom Cook",
+        email: "tom@example.com",
+        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    },
     token: "",
 };
 
@@ -89,7 +94,7 @@ const initContextState: UseAppContextType = {
 
 export const AppContext = createContext<UseAppContextType>(initContextState);
 
-export const ContextProvider = ({ children }: ChildrenType): ReactElement => {
+export const AppProvider = ({ children }: ChildrenType): ReactElement => {
     return (
         <AppContext.Provider value={useAppContext(initState)}>
             {children}
