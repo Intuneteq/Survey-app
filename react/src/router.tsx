@@ -1,11 +1,15 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
 
-import Dashboard from "./pages/Dashboard";
-import Surveys from "./pages/Surveys";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
 import GuestLayout from "./components/templates/GuestLayout";
 import DefaultLayout from "./components/templates/DefaultLayout";
+
+import Dashboard from "./pages/dashboard/Dashboard";
+
+import Surveys from "./pages/surveys/Surveys";
+import CreateSurvey from './pages/surveys/CreateSurvey'
+
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
 
 const router = createBrowserRouter([
     {
@@ -23,6 +27,10 @@ const router = createBrowserRouter([
             {
                 path: "/surveys",
                 element: <Surveys />,
+            },
+            {
+                path: "/surveys/create",
+                element: <CreateSurvey />,
             },
         ],
     },

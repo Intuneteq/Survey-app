@@ -1,4 +1,4 @@
-import PageComponent from "../components/organisms/PageComponent"
+import PageComponent from "../../components/organisms/PageComponent"
 
 const Dashboard = () => {
     return (
