@@ -3,6 +3,7 @@ import router from "../router";
 
 export interface ApiError {
     errors: Array<string[]>;
+    error: string
   }
 
 export const axiosClient = axios.create({

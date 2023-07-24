@@ -1,0 +1,1 @@
+export type ErrorObj = { __html: string };

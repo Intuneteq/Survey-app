@@ -28,7 +28,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
         $credentials = $request->validated();
         $remember = $credentials['remember'] ?? false;

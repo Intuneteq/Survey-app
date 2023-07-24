@@ -5,7 +5,7 @@ import { ApiError, axiosClient } from "../../api/axios";
 import { AxiosError } from "axios";
 import { useAppHook } from "../../contexts/AppContext";
 
-type ErrorObj = { __html: string };
+import { ErrorObj } from "../../types/auth";
 
 const Register = () => {
     const [name, setName] = useState<string>("");
