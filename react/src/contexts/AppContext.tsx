@@ -208,15 +208,15 @@ export const initState: AppState = {
         email: "tom@example.com",
         avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
     },
-    token: "",
+    token: localStorage.getItem("TOKEN") || "",
     surveys: [...TMP_SURVEY],
 };
 
 // The list of actions to be taken by the reducer
 const enum REDUCER_ACTION_TYPE {
-    UPDATE_USER,
-    UPDATE_TOKEN,
-    UPDATE_SURVEY,
+    SET_USER,
+    SET_TOKEN,
+    SET_SURVEY,
 }
 
 // Reducer action type
@@ -228,13 +228,13 @@ type ReducerAction = {
 // Reducer Function
 const reducer = (state: AppState, action: ReducerAction): AppState => {
     switch (action.type) {
-        case REDUCER_ACTION_TYPE.UPDATE_USER:
+        case REDUCER_ACTION_TYPE.SET_USER:
             return { ...state, user: action.payload as User };
 
-        case REDUCER_ACTION_TYPE.UPDATE_TOKEN:
+        case REDUCER_ACTION_TYPE.SET_TOKEN:
             return { ...state, token: action.payload as string };
 
-        case REDUCER_ACTION_TYPE.UPDATE_SURVEY:
+        case REDUCER_ACTION_TYPE.SET_SURVEY:
             return {
                 ...state,
                 surveys: [...state.surveys, action.payload as Survey],
@@ -251,21 +251,20 @@ const useAppContext = (initState: AppState) => {
 
     const setUser = useCallback(
         (user: User) =>
-            dispatch({ type: REDUCER_ACTION_TYPE.UPDATE_USER, payload: user }),
+            dispatch({ type: REDUCER_ACTION_TYPE.SET_USER, payload: user }),
         []
     );
 
-    const setToken = useCallback(
-        (token: string) =>
-            dispatch({
-                type: REDUCER_ACTION_TYPE.UPDATE_TOKEN,
-                payload: token,
-            }),
-        []
-    );
+    const setToken = useCallback((token: string) => {
+        localStorage.setItem("TOKEN", token);
+        dispatch({
+            type: REDUCER_ACTION_TYPE.SET_TOKEN,
+            payload: token,
+        });
+    }, []);
 
     const setSurvey = useCallback((survey: Survey) => {
-        dispatch({ type: REDUCER_ACTION_TYPE.UPDATE_SURVEY, payload: survey });
+        dispatch({ type: REDUCER_ACTION_TYPE.SET_SURVEY, payload: survey });
     }, []);
 
     return { state, setUser, setToken, setSurvey };
