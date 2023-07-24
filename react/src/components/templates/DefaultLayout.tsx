@@ -1,7 +1,8 @@
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon, UserIcon } from "@heroicons/react/24/outline";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Navigate, Outlet } from "react-router-dom";
+
 import { useAppHook } from "../../contexts/AppContext";
 
 type NavigationType = { name: string; to: string; current: boolean };
@@ -16,7 +17,11 @@ function classNames(...classes: Array<string>) {
 }
 
 export default function DefaultLayout() {
-    const { user } = useAppHook();
+    const { user, token } = useAppHook();
+
+    if (!token) {
+        return <Navigate to={"/login"} />;
+    }
 
     async function logout(e: React.MouseEvent<HTMLElement>): Promise<void> {
         e.preventDefault();
@@ -154,7 +159,7 @@ export default function DefaultLayout() {
                                 <div className="border-t border-gray-700 pb-3 pt-4">
                                     <div className="flex items-center px-5">
                                         <div className="flex-shrink-0">
-                                        <UserIcon className="w-8 h-8 bg-black/25 p-2 rounded-full text-white" />
+                                            <UserIcon className="w-8 h-8 bg-black/25 p-2 rounded-full text-white" />
                                         </div>
                                         <div className="ml-3">
                                             <div className="text-base font-medium leading-none text-white">
