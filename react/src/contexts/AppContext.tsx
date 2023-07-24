@@ -249,13 +249,13 @@ const reducer = (state: AppState, action: ReducerAction): AppState => {
 const useAppContext = (initState: AppState) => {
     const [state, dispatch] = useReducer(reducer, initState);
 
-    const updateUser = useCallback(
+    const setUser = useCallback(
         (user: User) =>
             dispatch({ type: REDUCER_ACTION_TYPE.UPDATE_USER, payload: user }),
         []
     );
 
-    const updateToken = useCallback(
+    const setToken = useCallback(
         (token: string) =>
             dispatch({
                 type: REDUCER_ACTION_TYPE.UPDATE_TOKEN,
@@ -264,11 +264,11 @@ const useAppContext = (initState: AppState) => {
         []
     );
 
-    const updateSurvey = useCallback((survey: Survey) => {
+    const setSurvey = useCallback((survey: Survey) => {
         dispatch({ type: REDUCER_ACTION_TYPE.UPDATE_SURVEY, payload: survey });
     }, []);
 
-    return { state, updateUser, updateToken, updateSurvey };
+    return { state, setUser, setToken, setSurvey };
 };
 
 // use App Context return type
@@ -282,9 +282,9 @@ type ChildrenType = {
 // Initial state for the app context
 const initContextState: UseAppContextType = {
     state: initState,
-    updateToken: () => {},
-    updateUser: () => {},
-    updateSurvey: () => {},
+    setToken: () => {},
+    setUser: () => {},
+    setSurvey: () => {},
 };
 
 export const AppContext = createContext<UseAppContextType>(initContextState);
@@ -301,18 +301,18 @@ type UseAppHookType = {
     user: User;
     token: string;
     surveys: Array<Survey>;
-    updateToken: (token: string) => void;
-    updateUser: (user: User) => void;
-    updateSurvey: (survey: Survey) => void;
+    setToken: (token: string) => void;
+    setUser: (user: User) => void;
+    setSurvey: (survey: Survey) => void;
 };
 
 export const useAppHook = (): UseAppHookType => {
     const {
         state: { user, token, surveys },
-        updateToken,
-        updateUser,
-        updateSurvey,
+        setToken,
+        setUser,
+        setSurvey,
     } = useContext(AppContext);
 
-    return { user, token, surveys, updateToken, updateUser, updateSurvey };
+    return { user, token, surveys, setToken, setUser, setSurvey };
 };

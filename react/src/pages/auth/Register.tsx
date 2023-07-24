@@ -1,12 +1,54 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
+
+import { ApiError, axiosClient } from "../../api/axios";
+import { AxiosError } from "axios";
+import { useAppHook } from "../../contexts/AppContext";
+
+type ErrorObj = { __html: string };
 
 const Register = () => {
-    const [fullName, setFullName] = useState("")
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [confirmPassword, setConfirmPassword] = useState("")
-    
+    const [name, setName] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const [confirmPassword, setConfirmPassword] = useState<string>("");
+    const [error, setError] = useState<ErrorObj>({ __html: "" });
+
+    const { setToken, setUser } = useAppHook();
+
+    const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setError({ __html: "" });
+
+        const data = {
+            name,
+            email,
+            password,
+            password_confirmation: confirmPassword,
+        };
+
+        try {
+            const { data: res } = await axiosClient.post("/register", data);
+
+            setUser(res.user);
+            setToken(res.token);
+        } catch (error: any) {
+            const axiosError: AxiosError<ApiError> = error;
+
+            if (axiosError.response) {
+                const errors = Object.values(axiosError.response.data.errors);
+                const finalErrors = errors.reduce(
+                    (acc: string[], next: string[]) => [...acc, ...next],
+                    []
+                );
+
+                setError({ __html: finalErrors.join("<br>") });
+            }
+
+            console.log(error);
+        }
+    };
+
     return (
         <>
             <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
@@ -14,20 +56,33 @@ const Register = () => {
             </h2>
 
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                <form className="space-y-6" action="#" method="POST">
+                {error.__html && (
+                    <div
+                        className="bg-red-500 rounded py-2 px-3 text-white"
+                        dangerouslySetInnerHTML={error}
+                    ></div>
+                )}
+                <form
+                    onSubmit={onSubmit}
+                    className="space-y-6"
+                    action="#"
+                    method="POST"
+                >
                     <div>
                         <label
-                            htmlFor="full_name"
+                            htmlFor="name"
                             className="block text-sm font-medium leading-6 text-gray-900"
                         >
                             Full Name
                         </label>
                         <div className="mt-2">
                             <input
-                                id="full_name"
+                                id="name"
                                 name="name"
                                 type="text"
                                 required
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             />
                         </div>
@@ -45,6 +100,8 @@ const Register = () => {
                                 id="email"
                                 name="email"
                                 type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 autoComplete="email"
                                 required
                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -66,6 +123,8 @@ const Register = () => {
                                 id="password"
                                 name="password"
                                 type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                                 autoComplete="current-password"
                                 required
                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -87,6 +146,10 @@ const Register = () => {
                                 id="confirm_password"
                                 name="confirm_password"
                                 type="password"
+                                value={confirmPassword}
+                                onChange={(e) =>
+                                    setConfirmPassword(e.target.value)
+                                }
                                 required
                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             />
@@ -106,7 +169,7 @@ const Register = () => {
                 <p className="mt-10 text-center text-sm text-gray-500">
                     Already have an account?{" "}
                     <Link
-                        to={'/login'}
+                        to={"/login"}
                         className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
                     >
                         Login

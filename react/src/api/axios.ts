@@ -1,6 +1,10 @@
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import router from "../router";
 
+export interface ApiError {
+    errors: Array<string[]>;
+  }
+
 export const axiosClient = axios.create({
     baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`,
 });
