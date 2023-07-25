@@ -201,13 +201,17 @@ type AppState = {
     surveys: Array<Survey>;
 };
 
+const user = localStorage.getItem("SURVEY_USER")
+    ? JSON.parse(localStorage.getItem("SURVEY_USER")!)
+    : {
+          name: "Tom Cook",
+          email: "tom@example.com",
+          avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+      };
+
 // Initial app state for the reducer
 export const initState: AppState = {
-    user: {
-        name: "Tom Cook",
-        email: "tom@example.com",
-        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
+    user,
     token: localStorage.getItem("TOKEN") || "",
     surveys: [...TMP_SURVEY],
 };
@@ -217,6 +221,7 @@ const enum REDUCER_ACTION_TYPE {
     SET_USER,
     SET_TOKEN,
     SET_SURVEY,
+    LOG_OUT,
 }
 
 // Reducer action type
@@ -240,6 +245,13 @@ const reducer = (state: AppState, action: ReducerAction): AppState => {
                 surveys: [...state.surveys, action.payload as Survey],
             };
 
+        case REDUCER_ACTION_TYPE.LOG_OUT:
+            return {
+                user: { name: "", email: "", avatar: "" },
+                token: "",
+                surveys: [],
+            };
+
         default:
             throw new Error();
     }
@@ -249,11 +261,10 @@ const reducer = (state: AppState, action: ReducerAction): AppState => {
 const useAppContext = (initState: AppState) => {
     const [state, dispatch] = useReducer(reducer, initState);
 
-    const setUser = useCallback(
-        (user: User) =>
-            dispatch({ type: REDUCER_ACTION_TYPE.SET_USER, payload: user }),
-        []
-    );
+    const setUser = useCallback((user: User) => {
+        localStorage.setItem("SURVEY_USER", JSON.stringify(user));
+        dispatch({ type: REDUCER_ACTION_TYPE.SET_USER, payload: user });
+    }, []);
 
     const setToken = useCallback((token: string) => {
         localStorage.setItem("TOKEN", token);
@@ -267,7 +278,13 @@ const useAppContext = (initState: AppState) => {
         dispatch({ type: REDUCER_ACTION_TYPE.SET_SURVEY, payload: survey });
     }, []);
 
-    return { state, setUser, setToken, setSurvey };
+    const logout = () => {
+        localStorage.removeItem("TOKEN");
+        localStorage.removeItem("SURVEY_USER");
+        dispatch({ type: REDUCER_ACTION_TYPE.LOG_OUT, payload: "" });
+    };
+
+    return { state, setUser, setToken, setSurvey, logout };
 };
 
 // use App Context return type
@@ -284,6 +301,7 @@ const initContextState: UseAppContextType = {
     setToken: () => {},
     setUser: () => {},
     setSurvey: () => {},
+    logout: () => {},
 };
 
 export const AppContext = createContext<UseAppContextType>(initContextState);
@@ -303,6 +321,7 @@ type UseAppHookType = {
     setToken: (token: string) => void;
     setUser: (user: User) => void;
     setSurvey: (survey: Survey) => void;
+    logout: () => void;
 };
 
 export const useAppHook = (): UseAppHookType => {
@@ -311,7 +330,8 @@ export const useAppHook = (): UseAppHookType => {
         setToken,
         setUser,
         setSurvey,
+        logout,
     } = useContext(AppContext);
 
-    return { user, token, surveys, setToken, setUser, setSurvey };
+    return { user, token, surveys, setToken, setUser, setSurvey, logout };
 };

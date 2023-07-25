@@ -4,6 +4,7 @@ import { Bars3Icon, XMarkIcon, UserIcon } from "@heroicons/react/24/outline";
 import { NavLink, Navigate, Outlet } from "react-router-dom";
 
 import { useAppHook } from "../../contexts/AppContext";
+import { axiosClient } from "../../api/axios";
 
 type NavigationType = { name: string; to: string; current: boolean };
 
@@ -17,7 +18,7 @@ function classNames(...classes: Array<string>) {
 }
 
 export default function DefaultLayout() {
-    const { user, token } = useAppHook();
+    const { user, token, logout: logOut } = useAppHook();
 
     if (!token) {
         return <Navigate to={"/login"} />;
@@ -26,6 +27,13 @@ export default function DefaultLayout() {
     async function logout(e: React.MouseEvent<HTMLElement>): Promise<void> {
         e.preventDefault();
         console.log("logout");
+
+        try {
+            await axiosClient.post("/logout", null);
+            logOut();
+        } catch (error) {
+            console.log(error);
+        }
     }
     return (
         <>
