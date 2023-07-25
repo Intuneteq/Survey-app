@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 
 import TButton from "../../components/atoms/TButton";
@@ -7,44 +7,62 @@ import PageComponent from "../../components/organisms/PageComponent";
 import { Survey } from "../../contexts/AppContext";
 import { axiosClient } from "../../api/axios";
 
+type CreateSurveyType = Partial<Survey> & {
+    image: globalThis.File | string;
+};
+
 const CreateSurvey = () => {
-    const [survey, setSurvey] = useState<Partial<Survey>>({
+    const [survey, setSurvey] = useState<CreateSurveyType>({
         title: "",
         slug: "",
         status: false,
         description: "",
+        image: "",
         image_url: "",
         expire_date: "",
         questions: [],
     });
 
-    const onImageChoose = () => {
-        console.log("choose");
+    const onImageChoose = (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files![0];
+
+        const reader = new FileReader();
+        
+        reader.onload = () => {
+            setSurvey({
+                ...survey,
+                image: file,
+                image_url: reader.result as string,
+            });
+        };
+
+        e.target.value = ""
+
+        reader.readAsDataURL(file)
     };
 
     const addQuestion = () => {
-        console.log("Add Question");
+        console.log('question');
+        
     };
 
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("submit");
+        console.log("submit", survey);
 
-        const data = {
-            title: "lorem",
-            description: "lorem",
-            slug: "lorem",
-            status: false,
-            questions: []
+        const data = {...survey};
+
+        if(data.image) {
+            data.image = data.image_url as string
         }
+
+        delete data.image_url;
 
         try {
             const { data: res } = await axiosClient.post('/surveys', data);
             console.log(res);
-            
         } catch (error) {
-            console.log('error', error);
-            
+            console.log("error", error);
         }
     };
 

@@ -32,6 +32,7 @@ class SurveyController extends Controller
         if (isset($data['image'])) {
             $relativePath = $this->saveImage($data['image']);  // Implement s3 storage
             var_dump('relative path', $relativePath);
+            return '';
         }
 
         // Create survey
@@ -63,7 +64,7 @@ class SurveyController extends Controller
     {
         $data = $request->validated();
 
-        dd('data to be updated', $data);
+        // dd('data to be updated', $data);
 
         // Check if image was given and save on local file system.
         if (isset($data['image'])) {
@@ -82,14 +83,14 @@ class SurveyController extends Controller
 
         $survey->update($data);
 
-        dd('Questions', $survey->questions());
+        // dd('Questions', $survey->questions());
 
-        dd('Pluck method', $survey->questions()->pluck('id'));
+        // dd('Pluck method', $survey->questions()->pluck('id'));
 
         // Get ids as plain array of existing questions
         $existingIds = $survey->questions()->pluck('id')->toArray();
 
-        dd('existing Ids', $existingIds);
+        // dd('existing Ids', $existingIds);
 
         // Get Id as plain array of new questions
         $newIds = Arr::pluck($data['questons'], 'id');
@@ -150,12 +151,8 @@ class SurveyController extends Controller
         // Check if image is valid base64 string
         if (preg_match('/^data:image\/(\w+);base64,/', $image, $type)) {
 
-            dd($type);
-
             // Take out the base64 encoded text without mime type
             $image = substr($image, strpos($image, ',') + 1);
-
-            dd($image);
 
             // Get file extension
             $type = strtolower($type[1]);
