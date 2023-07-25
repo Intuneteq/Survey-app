@@ -26,7 +26,6 @@ export default function DefaultLayout() {
 
     async function logout(e: React.MouseEvent<HTMLElement>): Promise<void> {
         e.preventDefault();
-        console.log("logout");
 
         try {
             await axiosClient.post("/logout", null);
