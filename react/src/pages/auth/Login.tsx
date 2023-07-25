@@ -1,11 +1,11 @@
 import { FormEvent, useState } from "react";
+import { Link } from "react-router-dom";
+import { AxiosError } from "axios";
 
 import { ApiError, axiosClient } from "../../api/axios";
-import { AxiosError } from "axios";
 import { useAppHook } from "../../contexts/AppContext";
-
 import { ErrorObj } from "../../types/auth";
-import { Link } from "react-router-dom";
+import showError from "../../utils/errors";
 
 const Login = () => {
     const [email, setEmail] = useState<string>("");
@@ -29,19 +29,7 @@ const Login = () => {
             const axiosError: AxiosError<ApiError> = error;
 
             if (axiosError.response) {
-                if (Array.isArray(axiosError.response.data.errors)) {
-                    const errors = Object.values(
-                        axiosError.response.data?.errors
-                    );
-                    const finalErrors = errors.reduce(
-                        (acc: string[], next: string[]) => [...acc, ...next],
-                        []
-                    );
-
-                    setError({ __html: finalErrors.join("<br>") });
-                } else {
-                    setError({ __html: axiosError.response.data?.error });
-                }
+                setError(showError(axiosError.response));
             }
 
             console.log(error);

@@ -6,6 +6,7 @@ import { AxiosError } from "axios";
 import { useAppHook } from "../../contexts/AppContext";
 
 import { ErrorObj } from "../../types/auth";
+import showError from "../../utils/errors";
 
 const Register = () => {
     const [name, setName] = useState<string>("");
@@ -36,13 +37,7 @@ const Register = () => {
             const axiosError: AxiosError<ApiError> = error;
 
             if (axiosError.response) {
-                const errors = Object.values(axiosError.response.data.errors);
-                const finalErrors = errors.reduce(
-                    (acc: string[], next: string[]) => [...acc, ...next],
-                    []
-                );
-
-                setError({ __html: finalErrors.join("<br>") });
+                setError(showError(axiosError.response));
             }
 
             console.log(error);

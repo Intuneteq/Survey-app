@@ -1,17 +1,26 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { PhotoIcon } from "@heroicons/react/24/outline";
+import { useNavigate } from "react-router-dom";
+import { AxiosError } from "axios";
 
 import TButton from "../../components/atoms/TButton";
 import PageComponent from "../../components/organisms/PageComponent";
 
-import { Survey } from "../../contexts/AppContext";
-import { axiosClient } from "../../api/axios";
+import { Survey, useAppHook } from "../../contexts/AppContext";
+import { ApiError, axiosClient } from "../../api/axios";
+import { ErrorObj } from "../../types/auth";
+import showError from "../../utils/errors";
 
 type CreateSurveyType = Partial<Survey> & {
     image: globalThis.File | string;
 };
 
 const CreateSurvey = () => {
+    const navigate = useNavigate();
+    const { setSurvey: updateSurvey } = useAppHook();
+
+    const [error, setError] = useState<ErrorObj>({ __html: "" });
+
     const [survey, setSurvey] = useState<CreateSurveyType>({
         title: "",
         slug: "",
@@ -27,7 +36,7 @@ const CreateSurvey = () => {
         const file = e.target.files![0];
 
         const reader = new FileReader();
-        
+
         reader.onload = () => {
             setSurvey({
                 ...survey,
@@ -36,33 +45,40 @@ const CreateSurvey = () => {
             });
         };
 
-        e.target.value = ""
+        e.target.value = "";
 
-        reader.readAsDataURL(file)
+        reader.readAsDataURL(file);
     };
 
     const addQuestion = () => {
-        console.log('question');
-        
+        console.log("question");
     };
 
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("submit", survey);
+        setError({ __html: "" });
 
-        const data = {...survey};
+        const data = { ...survey };
 
-        if(data.image) {
-            data.image = data.image_url as string
+        if (data.image) {
+            data.image = data.image_url as string;
         }
 
         delete data.image_url;
 
         try {
-            const { data: res } = await axiosClient.post('/surveys', data);
-            console.log(res);
-        } catch (error) {
-            console.log("error", error);
+            const { data: res } = await axiosClient.post("/surveys", data);
+
+            updateSurvey(res);
+            navigate("/surveys");
+        } catch (error: any) {
+            const axiosError: AxiosError<ApiError> = error;
+
+            if (axiosError.response) {
+                setError(showError(axiosError.response));
+            }
+
+            console.log(error);
         }
     };
 
@@ -71,6 +87,15 @@ const CreateSurvey = () => {
             <form action="#" method="POST" onSubmit={(e) => onSubmit(e)}>
                 <div className="shadow sm:overflow-hidden sm:rounded-md">
                     <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
+                        {/* error */}
+                        {error.__html && (
+                            <div
+                                className="bg-red-500 text-white py-3 px-3"
+                                dangerouslySetInnerHTML={error}
+                            ></div>
+                        )}
+                        {/* error */}
+
                         {/*Image*/}
                         <div>
                             <label className="block text-sm font-medium text-gray-700">
@@ -95,6 +120,7 @@ const CreateSurvey = () => {
                                 >
                                     <input
                                         type="file"
+                                        required
                                         className="absolute left-0 top-0 right-0 bottom-0 opacity-0"
                                         onChange={onImageChoose}
                                     />
@@ -116,6 +142,7 @@ const CreateSurvey = () => {
                                 type="text"
                                 name="title"
                                 id="title"
+                                required
                                 value={survey.title}
                                 onChange={(ev) =>
                                     setSurvey({
@@ -166,6 +193,7 @@ const CreateSurvey = () => {
                                 type="date"
                                 name="expire_date"
                                 id="expire_date"
+                                required
                                 value={survey.expire_date}
                                 onChange={(ev) =>
                                     setSurvey({

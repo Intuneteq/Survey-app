@@ -3,7 +3,6 @@ import axios, {
     AxiosResponse,
     InternalAxiosRequestConfig,
 } from "axios";
-import router from "../router";
 
 export interface ApiError {
     errors: Array<string[]>;
@@ -22,8 +21,10 @@ axiosClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 
 const onResponse = (res: AxiosResponse): AxiosResponse => res;
 const onResponseError = (error: AxiosError) => {
+
     if (error.response && error.response.status === 401) {
-        router.navigate("/login");
+        localStorage.removeItem("Token");
+        window.location.reload();
         return error;
     }
     throw error;

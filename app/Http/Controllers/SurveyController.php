@@ -31,8 +31,7 @@ class SurveyController extends Controller
 
         if (isset($data['image'])) {
             $relativePath = $this->saveImage($data['image']);  // Implement s3 storage
-            var_dump('relative path', $relativePath);
-            return '';
+            $data['image'] = $relativePath;
         }
 
         // Create survey
@@ -178,7 +177,7 @@ class SurveyController extends Controller
         $absolutePath = public_path($dir);
         $relativePath = $dir . $file;
 
-        if (!File::exits($absolutePath)) {
+        if (!File::exists($absolutePath)) {
             File::makeDirectory($absolutePath, 0755, true);
         }
         file_put_contents($relativePath, $image);
