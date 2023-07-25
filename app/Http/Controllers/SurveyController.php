@@ -29,10 +29,9 @@ class SurveyController extends Controller
     {
         $data = $request->validated();
 
-        $user = $request->user();
-
         if (isset($data['image'])) {
             $relativePath = $this->saveImage($data['image']);  // Implement s3 storage
+            var_dump('relative path', $relativePath);
         }
 
         // Create survey

@@ -1,8 +1,11 @@
 import { FormEvent, useState } from "react";
-import PageComponent from "../../components/organisms/PageComponent";
-import { Survey } from "../../contexts/AppContext";
 import { PhotoIcon } from "@heroicons/react/24/outline";
+
 import TButton from "../../components/atoms/TButton";
+import PageComponent from "../../components/organisms/PageComponent";
+
+import { Survey } from "../../contexts/AppContext";
+import { axiosClient } from "../../api/axios";
 
 const CreateSurvey = () => {
     const [survey, setSurvey] = useState<Partial<Survey>>({
@@ -23,9 +26,26 @@ const CreateSurvey = () => {
         console.log("Add Question");
     };
 
-    const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log("submit");
+
+        const data = {
+            title: "lorem",
+            description: "lorem",
+            slug: "lorem",
+            status: false,
+            questions: []
+        }
+
+        try {
+            const { data: res } = await axiosClient.post('/surveys', data);
+            console.log(res);
+            
+        } catch (error) {
+            console.log('error', error);
+            
+        }
     };
 
     return (
