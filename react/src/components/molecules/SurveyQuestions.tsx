@@ -21,7 +21,7 @@ const SurveyQuestions = ({ survey, onSurveyUpdate }: PropsType) => {
                 questions: [
                     ...model.questions!.slice(0, index),
                     {
-                        id: parseInt(uuidv4()),
+                        id: uuidv4(),
                         type: "text",
                         question: "",
                         description: "",
@@ -60,8 +60,10 @@ const SurveyQuestions = ({ survey, onSurveyUpdate }: PropsType) => {
     };
 
     const deleteQuestion = (question: QuestionType) => {
+        console.log(question);
+        
         const newQuestions = model.questions?.filter(
-            (q) => q.id != question.id
+            (q) => q.id !== question.id
         );
 
         setModel({ ...model, questions: newQuestions });

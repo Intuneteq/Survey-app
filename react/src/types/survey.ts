@@ -10,7 +10,7 @@ export type QuestionDataType = {
 export type QuestionListType = "select" | "text" | "checkbox" | "select" | "radio" | "textarea";
 
 export type QuestionType = {
-    id: number;
+    id: number | string;
     type: QuestionListType;
     question: string;
     description: string;
