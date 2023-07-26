@@ -36,7 +36,7 @@ const SurveyQuestions = ({ survey, onSurveyUpdate }: PropsType) => {
                 questions: [
                     ...model.questions!,
                     {
-                        id: parseInt(uuidv4()),
+                        id: uuidv4(),
                         type: "text",
                         question: "",
                         description: "",

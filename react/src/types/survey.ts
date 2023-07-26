@@ -7,7 +7,7 @@ export type QuestionDataType = {
     options: Array<OptionsType> | []
 }
 
-export type QuestionListType = "select" | "text" | "checkbox" | "select" | "radio" | "textarea";
+export type QuestionListType = "text" | "checkbox" | "select" | "radio" | "textarea";
 
 export type QuestionType = {
     id: number | string;

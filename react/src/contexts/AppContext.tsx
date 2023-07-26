@@ -339,7 +339,6 @@ export const useAppHook = (): UseAppHookType => {
         "select",
         "text",
         "checkbox",
-        "select",
         "radio",
         "textarea",
     ];
