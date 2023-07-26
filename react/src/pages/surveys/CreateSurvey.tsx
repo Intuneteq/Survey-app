@@ -5,15 +5,14 @@ import { AxiosError } from "axios";
 
 import TButton from "../../components/atoms/TButton";
 import PageComponent from "../../components/organisms/PageComponent";
+import SurveyQuestions from "../../components/molecules/SurveyQuestions";
 
-import { Survey, useAppHook } from "../../contexts/AppContext";
+import { useAppHook } from "../../contexts/AppContext";
 import { ApiError, axiosClient } from "../../api/axios";
-import { ErrorObj } from "../../types/auth";
 import showError from "../../utils/errors";
 
-type CreateSurveyType = Partial<Survey> & {
-    image: globalThis.File | string;
-};
+import { CreateSurveyType } from '../../types/survey'
+import { ErrorObj } from "../../types/auth";
 
 const CreateSurvey = () => {
     const navigate = useNavigate();
@@ -50,10 +49,6 @@ const CreateSurvey = () => {
         reader.readAsDataURL(file);
     };
 
-    const addQuestion = () => {
-        console.log("question");
-    };
-
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError({ __html: "" });
@@ -81,6 +76,10 @@ const CreateSurvey = () => {
             console.log(error);
         }
     };
+
+    const onSurveyUpdate = (survey: CreateSurveyType) => {
+        setSurvey({...survey})
+    }
 
     return (
         <PageComponent title="Create Survey">
@@ -194,7 +193,7 @@ const CreateSurvey = () => {
                                 name="expire_date"
                                 id="expire_date"
                                 required
-                                value={survey.expire_date}
+                                value={survey.expire_date as string}
                                 onChange={(ev) =>
                                     setSurvey({
                                         ...survey,
@@ -237,9 +236,7 @@ const CreateSurvey = () => {
                         </div>
                         {/*Active*/}
 
-                        <button type="button" onClick={addQuestion}>
-                            Add question
-                        </button>
+                        <SurveyQuestions survey={survey} onSurveyUpdate={onSurveyUpdate} />
                     </div>
                     <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                         <TButton>Save</TButton>

@@ -6,14 +6,10 @@ import {
     ReactElement,
 } from "react";
 
-// User Type
-type User = {
-    name: string;
-    email: string;
-    avatar: string;
-};
+import { QuestionListType, Survey } from "../types/survey";
+import { User } from "../types/auth";
 
-const TMP_SURVEY = [
+const TMP_SURVEY: Array<Survey> = [
     {
         id: 1,
         image_url: "https://api.yoursurveys.xyz/images/vJutXzn02CDwdOyh.png",
@@ -22,15 +18,18 @@ const TMP_SURVEY = [
         status: true,
         description:
             "My name is Zura.<br>I am Web Developer with 9+ years of experience, free educational content creator, CTO, Lecturer and father of two wonderful daughters.<br><br>The purpose of the channel is to share my several years of experience with beginner developers.<br>Teach them what I know and make my experience as a lesson for others.",
-        created_at: "2022-01-07 13:23:41",
-        updated_at: "2022-01-18 16:34:19",
-        expire_date: "2022-01-23",
+        created_at: new Date("2022-01-07 13:23:41"),
+        updated_at: new Date("2022-01-18 16:34:19"),
+        expire_date: new Date("2022-01-23"),
         questions: [
             {
                 id: 15,
                 type: "text",
                 question: "From which country are you?",
-                description: null,
+                description: "",
+                data: {
+                    options: [],
+                },
             },
             {
                 id: 16,
@@ -153,14 +152,18 @@ const TMP_SURVEY = [
                 question: "What do you think about TheCodeholic channel?",
                 description:
                     "Write your honest opinion. Everything is anonymous.",
-                data: [],
+                data: {
+                    options: [],
+                },
             },
             {
                 id: 23,
                 type: "text",
                 question: "Which channel is your favorite one?",
-                description: null,
-                data: [],
+                description: "",
+                data: {
+                    options: [],
+                },
             },
         ],
     },
@@ -172,9 +175,9 @@ const TMP_SURVEY = [
         status: true,
         description:
             "React makes it painless to create interactive UIs. Design simple views for each state in your application, and React will efficiently update and render just the right components when your data changes.",
-        created_at: "2022-01-07 08:50:40",
-        updated_at: "2022-01-07 13:37:37",
-        expire_date: "2022-02-01",
+        created_at: new Date("2022-01-07 08:50:40"),
+        updated_at: new Date("2022-01-07 13:37:37"),
+        expire_date: new Date("2022-02-01"),
         questions: [],
     },
     {
@@ -185,14 +188,12 @@ const TMP_SURVEY = [
         status: true,
         description:
             "Laravel is a web application framework with expressive, elegant syntax. We\u2019ve already laid the foundation \u2014 freeing you to create without sweating the small things.",
-        created_at: "2022-01-07 13:28:56",
-        updated_at: "2022-01-07 13:28:56",
-        expire_date: "2022-01-20",
+        created_at: new Date("2022-01-07 13:28:56"),
+        updated_at: new Date("2022-01-07 13:28:56"),
+        expire_date: new Date("2022-01-20"),
         questions: [],
     },
 ];
-
-export type Survey = (typeof TMP_SURVEY)[number];
 
 // App state type (the user)
 type AppState = {
@@ -318,6 +319,7 @@ type UseAppHookType = {
     user: User;
     token: string;
     surveys: Array<Survey>;
+    questionsType: QuestionListType[];
     setToken: (token: string) => void;
     setUser: (user: User) => void;
     setSurvey: (survey: Survey) => void;
@@ -333,5 +335,23 @@ export const useAppHook = (): UseAppHookType => {
         logout,
     } = useContext(AppContext);
 
-    return { user, token, surveys, setToken, setUser, setSurvey, logout };
+    const questionsType: QuestionListType[] = [
+        "select",
+        "text",
+        "checkbox",
+        "select",
+        "radio",
+        "textarea",
+    ];
+
+    return {
+        user,
+        token,
+        surveys,
+        questionsType,
+        setToken,
+        setUser,
+        setSurvey,
+        logout,
+    };
 };
