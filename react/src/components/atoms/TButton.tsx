@@ -14,7 +14,7 @@ type PropTypes = {
     href?: string;
     link?: boolean;
     target?: string;
-    onDeleteClick?: () => void;
+    onClick?: () => void;
     children: ReactNode;
 };
 
@@ -27,7 +27,7 @@ const TButton = ({
     href = "",
     link = false,
     target = "_blank",
-    onDeleteClick,
+    onClick,
     children,
 }: PropTypes) => {
     let classes: ClassType = [
@@ -121,7 +121,7 @@ const TButton = ({
                 </Link>
             )}
             {!to && !href && (
-                <button onClick={onDeleteClick} className={classes.join(" ")}>
+                <button type="button" onClick={onClick} className={classes.join(" ")}>
                     {children}
                 </button>
             )}

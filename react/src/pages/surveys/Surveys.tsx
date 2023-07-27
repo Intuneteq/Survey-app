@@ -10,6 +10,7 @@ import { useAppHook } from "../../contexts/AppContext";
 import { LinkType, MetaType, Survey } from "../../types/survey";
 
 import getSurveys from "../../utils/surveys";
+import { axiosClient } from "../../api/axios";
 
 const Surveys = () => {
     const { surveys, setSurvey } = useAppHook();
@@ -25,8 +26,15 @@ const Surveys = () => {
         links: [],
     });
 
-    const onDeleteClick = () => {
-        console.log("survey delete");
+    const onDeleteClick = async (id: number) => {
+        if (window.confirm("Are you sure yo want to delete this survey")) {
+            try {
+                await axiosClient.delete(`surveys/${id}`);
+                getSurveys({ url: undefined, setLoading, setMeta, setSurvey });
+            } catch (error) {
+                console.log(error);
+            }
+        }
     };
 
     const onPageClick = (link: LinkType) => {

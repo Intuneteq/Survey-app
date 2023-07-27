@@ -8,7 +8,10 @@ import TButton, { Colors } from "../atoms/TButton";
 
 import { Survey } from "../../types/survey";
 
-type PropsType = { survey: Survey; onDeleteClick: () => void };
+type PropsType = {
+    survey: Survey;
+    onDeleteClick: (id: number) => void;
+};
 
 const SurveyListItem = ({ survey, onDeleteClick }: PropsType) => {
     return (
@@ -37,7 +40,7 @@ const SurveyListItem = ({ survey, onDeleteClick }: PropsType) => {
 
                 {survey.id && (
                     <TButton
-                        onDeleteClick={onDeleteClick}
+                        onClick={() => onDeleteClick(survey.id)}
                         circle
                         link
                         color={Colors.RED}
