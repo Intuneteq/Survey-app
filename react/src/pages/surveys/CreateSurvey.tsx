@@ -11,7 +11,7 @@ import { useAppHook } from "../../contexts/AppContext";
 import { ApiError, axiosClient } from "../../api/axios";
 import showError from "../../utils/errors";
 
-import { CreateSurveyType } from '../../types/survey'
+import { CreateSurveyType } from "../../types/survey";
 import { ErrorObj } from "../../types/auth";
 
 const CreateSurvey = () => {
@@ -77,10 +77,6 @@ const CreateSurvey = () => {
         }
     };
 
-    const onSurveyUpdate = (survey: CreateSurveyType) => {
-        setSurvey({...survey})
-    }
-
     return (
         <PageComponent title="Create Survey">
             <form action="#" method="POST" onSubmit={(e) => onSubmit(e)}>
@@ -119,7 +115,7 @@ const CreateSurvey = () => {
                                 >
                                     <input
                                         type="file"
-                                        required
+                                        // required
                                         className="absolute left-0 top-0 right-0 bottom-0 opacity-0"
                                         onChange={onImageChoose}
                                     />
@@ -236,7 +232,10 @@ const CreateSurvey = () => {
                         </div>
                         {/*Active*/}
 
-                        <SurveyQuestions survey={survey} onSurveyUpdate={onSurveyUpdate} />
+                        <SurveyQuestions
+                            survey={survey}
+                            setSurvey={setSurvey}
+                        />
                     </div>
                     <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                         <TButton>Save</TButton>

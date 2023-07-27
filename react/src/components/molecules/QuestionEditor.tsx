@@ -9,7 +9,7 @@ type PropTypes = {
     index: number;
     question: QuestionType;
     questionChange: (question: QuestionType) => void;
-    addQuestion: (index?: number) => void;
+    addQuestion: (e: React.MouseEvent<HTMLElement>, index?: number) => void;
     deleteQuestion: (question: QuestionType) => void;
 };
 
@@ -32,8 +32,9 @@ const QuestionEditor = ({
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
-    function onTypeChange() {
+    function onTypeChange(e: React.ChangeEvent<HTMLSelectElement>) {
         console.log("change type");
+        setModel({ ...model, type: e.target.value as QuestionListType });
     }
 
     return (
@@ -46,7 +47,7 @@ const QuestionEditor = ({
                     <button
                         type="button"
                         className="flex items-center text-xs py-1 px-2 mr-2 rounded-sm text-white bg-gray-600 hover:bg-gray-700"
-                        onClick={() => addQuestion(index + 1)}
+                        onClick={(e) => addQuestion(e, index + 1)}
                     >
                         <PlusIcon className="w-4" />
                         add
@@ -95,14 +96,11 @@ const QuestionEditor = ({
                         name="questionType"
                         id="questionType"
                         value={model.type}
-                        onChange={onTypeChange}
+                        onChange={(e) => onTypeChange(e)}
                         className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                     >
                         {questionsType.map((type) => (
-                            <option
-                                value={type}
-                                key={type}
-                            >
+                            <option value={type} key={type}>
                                 {upperCaseFirst(type)}
                             </option>
                         ))}

@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { v4 as uuidv4 } from "uuid";
 
@@ -8,70 +7,59 @@ import { CreateSurveyType, QuestionType } from "../../types/survey";
 
 type PropsType = {
     survey: CreateSurveyType;
-    onSurveyUpdate: (survey: CreateSurveyType) => void;
+    setSurvey: React.Dispatch<React.SetStateAction<CreateSurveyType>>;
 };
 
-const SurveyQuestions = ({ survey, onSurveyUpdate }: PropsType) => {
-    const [model, setModel] = useState<CreateSurveyType>({ ...survey });
+const SurveyQuestions = ({ survey, setSurvey }: PropsType) => {
+    const addQuestion = (e: React.MouseEvent<HTMLElement>, index?: number) => {
+        e.preventDefault();
 
-    const addQuestion = (index?: number) => {
+        const question: QuestionType = {
+            id: uuidv4(),
+            type: "text",
+            question: "",
+            description: "",
+            data: { options: [] },
+        };
+
         if (index) {
-            setModel({
-                ...model,
+            setSurvey((prev) => ({
+                ...prev,
                 questions: [
-                    ...model.questions!.slice(0, index),
-                    {
-                        id: uuidv4(),
-                        type: "text",
-                        question: "",
-                        description: "",
-                        data: { options: [] },
-                    },
-                    ...model.questions!.slice(index),
+                    ...prev.questions!.slice(0, index),
+                    question,
+                    ...prev.questions!.slice(index),
                 ],
-            });
+            }));
         } else {
-            setModel({
-                ...model,
-                questions: [
-                    ...model.questions!,
-                    {
-                        id: uuidv4(),
-                        type: "text",
-                        question: "",
-                        description: "",
-                        data: { options: [] },
-                    },
-                ],
-            });
+            setSurvey((prev) => ({
+                ...prev,
+                questions: [...prev.questions!, question],
+            }));
         }
     };
 
     const questionChange = (question: QuestionType) => {
         if (!question) return;
 
-        const newQuestions = model.questions?.map((q) => {
+        const newQuestions = survey.questions?.map((q) => {
             if (q.id == question.id) {
                 return { ...question };
             }
             return q;
         });
-        setModel({ ...model, questions: newQuestions });
+        setSurvey({ ...survey, questions: newQuestions });
     };
 
     const deleteQuestion = (question: QuestionType) => {
         console.log(question);
-        
-        const newQuestions = model.questions?.filter(
+
+        const newQuestions = survey.questions?.filter(
             (q) => q.id !== question.id
         );
 
-        setModel({ ...model, questions: newQuestions });
+        setSurvey({ ...survey, questions: newQuestions });
     };
-
-    useEffect(() => {
-        onSurveyUpdate(model);
-    }, [model]);
 
     return (
         <>
@@ -80,14 +68,14 @@ const SurveyQuestions = ({ survey, onSurveyUpdate }: PropsType) => {
                 <button
                     type="button"
                     className="flex items-center text-sm py-1 px-4 rounded-sm text-white bg-gray-600 hover:bg-gray-700"
-                    onClick={() => addQuestion()}
+                    onClick={(e) => addQuestion(e)}
                 >
                     <PlusIcon className="w-4 mr-2" />
                     Add question
                 </button>
             </div>
-            {model.questions!.length ? (
-                model.questions!.map((q, ind) => (
+            {survey.questions!.length ? (
+                survey.questions!.map((q, ind) => (
                     <QuestionEditor
                         key={q.id}
                         index={ind}
