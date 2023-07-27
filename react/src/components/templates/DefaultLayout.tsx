@@ -5,6 +5,7 @@ import { NavLink, Navigate, Outlet } from "react-router-dom";
 
 import { useAppHook } from "../../contexts/AppContext";
 import { axiosClient } from "../../api/axios";
+import Notifications from "../organisms/Notifications";
 
 type NavigationType = { name: string; to: string; current: boolean };
 
@@ -207,6 +208,8 @@ export default function DefaultLayout() {
                     )}
                 </Disclosure>
                 <Outlet />
+
+                <Notifications />
             </div>
         </>
     );

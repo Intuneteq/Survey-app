@@ -121,7 +121,7 @@ const TButton = ({
                 </Link>
             )}
             {!to && !href && (
-                <button type="button" onClick={onClick} className={classes.join(" ")}>
+                <button onClick={onClick} className={classes.join(" ")}>
                     {children}
                 </button>
             )}

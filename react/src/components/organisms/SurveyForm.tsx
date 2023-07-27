@@ -14,6 +14,7 @@ import { ApiError, axiosClient } from "../../api/axios";
 
 import showError from "../../utils/errors";
 import getSurveys from "../../utils/surveys";
+import { useAppHook } from "../../contexts/AppContext";
 
 type SurveyForm = {
     title: string;
@@ -25,6 +26,8 @@ type SurveyForm = {
 
 const SurveyForm = ({ title, method, survey, setSurvey, id }: SurveyForm) => {
     const navigate = useNavigate();
+    const { showNotification } = useAppHook();
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<ErrorObj>({ __html: "" });
 
@@ -61,8 +64,10 @@ const SurveyForm = ({ title, method, survey, setSurvey, id }: SurveyForm) => {
         try {
             if (id) {
                 await axiosClient.put(`/surveys/${id}`, data);
+                showNotification({ message: "The survey was updated" });
             } else {
                 await axiosClient.post("/surveys", data);
+                showNotification({ message: "The survey was created" });
             }
             navigate("/surveys");
         } catch (error: any) {
@@ -74,6 +79,7 @@ const SurveyForm = ({ title, method, survey, setSurvey, id }: SurveyForm) => {
 
             console.log(error);
         }
+        showNotification({ show: false, message: "" });
     };
 
     useEffect(() => {
@@ -82,9 +88,9 @@ const SurveyForm = ({ title, method, survey, setSurvey, id }: SurveyForm) => {
                 const survey = (await getSurveys({
                     url: `/surveys/${id}`,
                     setLoading,
-                    id
+                    id,
                 })) as CreateSurveyType;
-                
+
                 setSurvey(survey);
             }
             call();
@@ -96,7 +102,7 @@ const SurveyForm = ({ title, method, survey, setSurvey, id }: SurveyForm) => {
     const content = (
         <PageComponent title={title}>
             <form
-                action="#"
+                // action="#"
                 method={method.toUpperCase()}
                 onSubmit={(e) => onSubmit(e)}
             >

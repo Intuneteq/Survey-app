@@ -13,7 +13,7 @@ import getSurveys from "../../utils/surveys";
 import { axiosClient } from "../../api/axios";
 
 const Surveys = () => {
-    const { surveys, setSurvey } = useAppHook();
+    const { surveys, setSurvey, showNotification } = useAppHook();
 
     const [loading, setLoading] = useState(false);
     const [meta, setMeta] = useState<MetaType>({
@@ -31,10 +31,12 @@ const Surveys = () => {
             try {
                 await axiosClient.delete(`surveys/${id}`);
                 getSurveys({ url: undefined, setLoading, setMeta, setSurvey });
+                showNotification({ message: "Survey deleted" });
             } catch (error) {
                 console.log(error);
             }
         }
+        showNotification({ show: false });
     };
 
     const onPageClick = (link: LinkType) => {
@@ -50,7 +52,7 @@ const Surveys = () => {
     const content = (
         <>
             {!surveys.length ? (
-                <p> You have no surveys yet</p>
+                <p className="py-8 text-center text-gray-700"> You have no surveys yet</p>
             ) : (
                 <>
                     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
