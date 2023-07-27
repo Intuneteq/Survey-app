@@ -8,7 +8,8 @@ import PaginationLinks from "../../components/organisms/PaginationLinks";
 
 import { useAppHook } from "../../contexts/AppContext";
 import { LinkType, MetaType, Survey } from "../../types/survey";
-import { axiosClient } from "../../api/axios";
+
+import getSurveys from "../../utils/surveys";
 
 const Surveys = () => {
     const { surveys, setSurvey } = useAppHook();
@@ -29,24 +30,11 @@ const Surveys = () => {
     };
 
     const onPageClick = (link: LinkType) => {
-        getSurveys(link.url);
-    };
-
-    const getSurveys = async (url = "/surveys") => {
-        setLoading(true);
-        try {
-            const res = await axiosClient.get(url);
-
-            setSurvey(res.data.data);
-            setMeta(res.data.meta);
-        } catch (error) {
-            console.log(error);
-        }
-        setLoading(false);
+        getSurveys({ url: link.url, setLoading, setMeta, setSurvey });
     };
 
     useEffect(() => {
-        getSurveys();
+        getSurveys({ url: undefined, setLoading, setMeta, setSurvey });
     }, []);
 
     const loadingContent = <p className="text-center text-lg">loading...</p>;

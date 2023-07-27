@@ -7,6 +7,7 @@ import Dashboard from "./pages/dashboard/Dashboard";
 
 import Surveys from "./pages/surveys/Surveys";
 import CreateSurvey from './pages/surveys/CreateSurvey'
+import EditSurvey from "./pages/surveys/EditSurvey";
 
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
             {
                 path: "/surveys/create",
                 element: <CreateSurvey />,
+            },
+            {
+                path: "/surveys/:id/edit",
+                element: <EditSurvey />,
             },
         ],
     },

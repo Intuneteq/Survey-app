@@ -1,10 +1,13 @@
 import { useState } from "react";
-
-import { CreateSurveyType } from "../../types/survey";
+import { useParams } from "react-router-dom";
 
 import SurveyForm from "../../components/organisms/SurveyForm";
 
-const CreateSurvey = () => {
+import { CreateSurveyType } from "../../types/survey";
+
+const EditSurvey = () => {
+    const { id } = useParams();
+
     const [survey, setSurvey] = useState<CreateSurveyType>({
         title: "",
         slug: "",
@@ -18,12 +21,13 @@ const CreateSurvey = () => {
 
     return (
         <SurveyForm
-            title="Create Survey"
-            method="post"
+            title="Edit Survey"
+            method="put"
             survey={survey}
             setSurvey={setSurvey}
+            id={id}
         />
     );
 };
 
-export default CreateSurvey;
+export default EditSurvey;

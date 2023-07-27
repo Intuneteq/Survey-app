@@ -25,7 +25,7 @@ const SurveyListItem = ({ survey, onDeleteClick }: PropsType) => {
             ></div>
 
             <div className="flex justify-between items-center mt-3">
-                <TButton to={`surveys/${survey.id}`}>
+                <TButton to={`/surveys/${survey.id}/edit`}>
                     <PencilIcon className="w-5 h-5 mr-2" />
                     Edit
                 </TButton>
