@@ -202,13 +202,11 @@ type AppState = {
     surveys: Array<Survey>;
 };
 
-const user = localStorage.getItem("SURVEY_USER")
-    ? JSON.parse(localStorage.getItem("SURVEY_USER")!)
-    : {
-          name: "Tom Cook",
-          email: "tom@example.com",
-          avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-      };
+const user: User = {
+    name: "",
+    email: "",
+    avatar: "",
+};
 
 // Initial app state for the reducer
 export const initState: AppState = {
@@ -263,7 +261,6 @@ const useAppContext = (initState: AppState) => {
     const [state, dispatch] = useReducer(reducer, initState);
 
     const setUser = useCallback((user: User) => {
-        localStorage.setItem("SURVEY_USER", JSON.stringify(user));
         dispatch({ type: REDUCER_ACTION_TYPE.SET_USER, payload: user });
     }, []);
 
@@ -281,7 +278,6 @@ const useAppContext = (initState: AppState) => {
 
     const logout = () => {
         localStorage.removeItem("TOKEN");
-        localStorage.removeItem("SURVEY_USER");
         dispatch({ type: REDUCER_ACTION_TYPE.LOG_OUT, payload: "" });
     };
 

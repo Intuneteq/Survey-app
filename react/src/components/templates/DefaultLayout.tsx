@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon, UserIcon } from "@heroicons/react/24/outline";
 import { NavLink, Navigate, Outlet } from "react-router-dom";
@@ -18,11 +18,24 @@ function classNames(...classes: Array<string>) {
 }
 
 export default function DefaultLayout() {
-    const { user, token, logout: logOut } = useAppHook();
+    const { user, setUser, token, logout: logOut } = useAppHook();
 
     if (!token) {
         return <Navigate to={"/login"} />;
     }
+
+    useEffect(() => {
+        const getUser = async () => {
+            try {
+                const res = await axiosClient.get("/users/me");
+                setUser(res.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        getUser();
+    }, []);
 
     async function logout(e: React.MouseEvent<HTMLElement>): Promise<void> {
         e.preventDefault();
@@ -34,6 +47,7 @@ export default function DefaultLayout() {
             console.log(error);
         }
     }
+
     return (
         <>
             <div className="min-h-full">
