@@ -13,7 +13,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
 class SurveyController extends Controller
@@ -23,7 +22,7 @@ class SurveyController extends Controller
         $user = $request->user();
 
         return SurveyResource::collection(
-            Survey::where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(10)
+            Survey::where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(9)
         );
     }
 

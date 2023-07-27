@@ -33,3 +33,19 @@ export type Survey = {
 export type CreateSurveyType = Partial<Survey> & {
     image: globalThis.File | string;
 };
+
+export type LinkType = {
+    active: boolean;
+    label: string;
+    url: string;
+};
+
+export type MetaType = {
+    current_page: number;
+    from: number;
+    last_page: number;
+    to: number;
+    total: number;
+    per_page: number;
+    links: Array<LinkType>;
+};
