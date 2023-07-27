@@ -7,7 +7,6 @@ import TButton from "../../components/atoms/TButton";
 import PageComponent from "../../components/organisms/PageComponent";
 import SurveyQuestions from "../../components/molecules/SurveyQuestions";
 
-import { useAppHook } from "../../contexts/AppContext";
 import { ApiError, axiosClient } from "../../api/axios";
 import showError from "../../utils/errors";
 
@@ -16,7 +15,6 @@ import { ErrorObj } from "../../types/auth";
 
 const CreateSurvey = () => {
     const navigate = useNavigate();
-    const { setSurvey: updateSurvey } = useAppHook();
 
     const [error, setError] = useState<ErrorObj>({ __html: "" });
 
@@ -62,9 +60,7 @@ const CreateSurvey = () => {
         delete data.image_url;
 
         try {
-            const { data: res } = await axiosClient.post("/surveys", data);
-
-            updateSurvey(res.data);
+             await axiosClient.post("/surveys", data);
             navigate("/surveys");
         } catch (error: any) {
             const axiosError: AxiosError<ApiError> = error;

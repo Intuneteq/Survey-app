@@ -6,9 +6,11 @@ import PageComponent from "../../components/organisms/PageComponent";
 
 import { useAppHook } from "../../contexts/AppContext";
 import { Survey } from "../../types/survey";
+import { useEffect } from "react";
+import { axiosClient } from "../../api/axios";
 
 const Surveys = () => {
-    const { surveys } = useAppHook();
+    const { surveys, setSurvey } = useAppHook();
 
     const onDeleteClick = () => {
         console.log("survey delete");
@@ -20,6 +22,18 @@ const Surveys = () => {
             Create new
         </TButton>
     );
+
+    useEffect(() => {
+        const getSurveys = async () => {
+            try {
+                const res = await axiosClient.get("/surveys");
+                setSurvey(res.data.data)
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getSurveys();
+    }, []);
 
     return (
         <PageComponent title="Surveys" buttons={createBtn}>

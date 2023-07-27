@@ -226,7 +226,7 @@ const enum REDUCER_ACTION_TYPE {
 // Reducer action type
 type ReducerAction = {
     type: REDUCER_ACTION_TYPE;
-    payload: User | Survey | string;
+    payload: User | Survey[] | string;
 };
 
 // Reducer Function
@@ -241,7 +241,7 @@ const reducer = (state: AppState, action: ReducerAction): AppState => {
         case REDUCER_ACTION_TYPE.SET_SURVEY:
             return {
                 ...state,
-                surveys: [...state.surveys, action.payload as Survey],
+                surveys: [...action.payload as Array<Survey>],
             };
 
         case REDUCER_ACTION_TYPE.LOG_OUT:
@@ -272,8 +272,8 @@ const useAppContext = (initState: AppState) => {
         });
     }, []);
 
-    const setSurvey = useCallback((survey: Survey) => {
-        dispatch({ type: REDUCER_ACTION_TYPE.SET_SURVEY, payload: survey });
+    const setSurvey = useCallback((surveys: Survey[]) => {
+        dispatch({ type: REDUCER_ACTION_TYPE.SET_SURVEY, payload: surveys });
     }, []);
 
     const logout = () => {
@@ -318,7 +318,7 @@ type UseAppHookType = {
     questionsType: QuestionListType[];
     setToken: (token: string) => void;
     setUser: (user: User) => void;
-    setSurvey: (survey: Survey) => void;
+    setSurvey: (surveys: Survey[]) => void;
     logout: () => void;
 };
 
