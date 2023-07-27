@@ -1,8 +1,11 @@
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
+
 import TButton, { Colors } from "../../components/atoms/TButton";
 import SurveyListItem from "../../components/molecules/SurveyListItem";
 import PageComponent from "../../components/organisms/PageComponent";
-import { Survey, useAppHook } from "../../contexts/AppContext";
+
+import { useAppHook } from "../../contexts/AppContext";
+import { Survey } from "../../types/survey";
 
 const Surveys = () => {
     const { surveys } = useAppHook();

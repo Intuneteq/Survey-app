@@ -3,8 +3,10 @@ import {
     TrashIcon,
     PencilIcon,
 } from "@heroicons/react/24/outline";
-import { Survey } from "../../contexts/AppContext";
+
 import TButton, { Colors } from "../atoms/TButton";
+
+import { Survey } from "../../types/survey";
 
 type PropsType = { survey: Survey; onDeleteClick: () => void };
 

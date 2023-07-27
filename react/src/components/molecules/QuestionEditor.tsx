@@ -33,7 +33,6 @@ const QuestionEditor = ({
     }
 
     function onTypeChange(e: React.ChangeEvent<HTMLSelectElement>) {
-        console.log("change type");
         setModel({ ...model, type: e.target.value as QuestionListType });
     }
 

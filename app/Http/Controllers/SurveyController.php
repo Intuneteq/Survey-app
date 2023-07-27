@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\QuestionTypeEnum;
 use App\Models\Survey;
 use App\Http\Requests\StoreSurveyRequest;
 use App\Http\Requests\UpdateSurveyRequest;
@@ -12,6 +13,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
 class SurveyController extends Controller
@@ -193,7 +195,15 @@ class SurveyController extends Controller
 
         $validator = Validator::make($data, [
             'question' => 'required|string',
-            'type' => ['required', new Enum(QuestionTypeEnum::class)],
+            'type' => ['required', Rule::in(
+                [
+                    QuestionTypeEnum::Text->value,
+                    QuestionTypeEnum::Textarea->value,
+                    QuestionTypeEnum::Select->value,
+                    QuestionTypeEnum::Radio->value,
+                    QuestionTypeEnum::Checkbox->value,
+                ]
+            )],
             'description' => 'nullable|string',
             'data' => 'present',
             'survey_id' => 'exists:\App\Models\Survey,id'
@@ -205,10 +215,10 @@ class SurveyController extends Controller
     private function updateQuestion(SurveyQuestion $question, $data)
     {
         // dd('updating question', $data);
-        if(is_array($data['data'])) {
+        if (is_array($data['data'])) {
             $data['data'] = json_encode($data['data']);
         }
-        
+
         $validator = Validator::make($data, [
             'id' => 'exists:App\Models\SurveyQuestion,id',
             'question' => 'required|string',

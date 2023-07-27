@@ -64,7 +64,7 @@ const CreateSurvey = () => {
         try {
             const { data: res } = await axiosClient.post("/surveys", data);
 
-            updateSurvey(res);
+            updateSurvey(res.data);
             navigate("/surveys");
         } catch (error: any) {
             const axiosError: AxiosError<ApiError> = error;
