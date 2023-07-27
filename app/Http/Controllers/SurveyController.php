@@ -64,8 +64,6 @@ class SurveyController extends Controller
     {
         $data = $request->validated();
 
-        // dd('data to be updated', $data);
-
         // Check if image was given and save on local file system.
         if (isset($data['image'])) {
             $relativePath = $this->saveImage($data['image']);
@@ -75,27 +73,17 @@ class SurveyController extends Controller
             if ($survey->image) {
                 $absolutePath = public_path($survey->image);
 
-                dd('update image absolute path', $absolutePath);
-
                 File::delete($absolutePath);
             }
         }
 
         $survey->update($data);
 
-        // dd('Questions', $survey->questions());
-
-        // dd('Pluck method', $survey->questions()->pluck('id'));
-
         // Get ids as plain array of existing questions
         $existingIds = $survey->questions()->pluck('id')->toArray();
 
-        // dd('existing Ids', $existingIds);
-
         // Get Id as plain array of new questions
-        $newIds = Arr::pluck($data['questons'], 'id');
-
-        dd('mew Ids' . $newIds);
+        $newIds = Arr::pluck($data['questions'], 'id');
 
         // Find Questions to delete
         $toDelete = array_diff($existingIds, $newIds);
@@ -117,9 +105,9 @@ class SurveyController extends Controller
         // Update existing questions
         $questionMap = collect($data['questions'])->keyBy('id');
 
-        dd('question map', $questionMap);
 
-        foreach ($survey->questions as $question->id) {
+
+        foreach ($survey->questions as $question) {
             if (isset($questionMap[$question->id])) {
                 $this->updateQuestion($question, $questionMap[$question->id]);
             }
