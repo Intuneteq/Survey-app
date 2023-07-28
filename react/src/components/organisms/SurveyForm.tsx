@@ -64,10 +64,10 @@ const SurveyForm = ({ title, method, survey, setSurvey, id }: SurveyForm) => {
         try {
             if (id) {
                 await axiosClient.put(`/surveys/${id}`, data);
-                showNotification({ message: "The survey was updated" });
+                showNotification("The survey was updated");
             } else {
                 await axiosClient.post("/surveys", data);
-                showNotification({ message: "The survey was created" });
+                showNotification("The survey was created");
             }
             navigate("/surveys");
         } catch (error: any) {
@@ -79,7 +79,6 @@ const SurveyForm = ({ title, method, survey, setSurvey, id }: SurveyForm) => {
 
             console.log(error);
         }
-        showNotification({ show: false, message: "" });
     };
 
     useEffect(() => {

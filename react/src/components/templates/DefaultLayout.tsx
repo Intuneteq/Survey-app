@@ -5,7 +5,7 @@ import { NavLink, Navigate, Outlet } from "react-router-dom";
 
 import { useAppHook } from "../../contexts/AppContext";
 import { axiosClient } from "../../api/axios";
-import Notifications from "../organisms/Notifications";
+import Notifications from "../molecules/Notifications";
 
 type NavigationType = { name: string; to: string; current: boolean };
 

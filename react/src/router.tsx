@@ -11,6 +11,7 @@ import EditSurvey from "./pages/surveys/EditSurvey";
 
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
+import Error from "./pages/Error";
 
 const router = createBrowserRouter([
     {
@@ -52,7 +53,12 @@ const router = createBrowserRouter([
                 element: <Register />,
             },
         ],
+        
     },
+    {
+        path: "/*",
+        element: <Error />
+    }
 ]);
 
 export default router;

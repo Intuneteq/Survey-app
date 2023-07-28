@@ -46,12 +46,13 @@ const enum REDUCER_ACTION_TYPE {
     SET_SURVEY,
     LOG_OUT,
     SHOW_NOTIFICATION,
+    KILL_NOTIFICATION,
 }
 
 // Reducer action type
 type ReducerAction = {
     type: REDUCER_ACTION_TYPE;
-    payload: User | Survey[] | string | Notification;
+    payload: User | Survey[] | string;
 };
 
 // Reducer Function
@@ -70,25 +71,19 @@ const reducer = (state: AppState, action: ReducerAction): AppState => {
             };
 
         case REDUCER_ACTION_TYPE.SHOW_NOTIFICATION:
-            const { message, show } = action.payload as Notification;
             return {
                 ...state,
                 notification: {
-                    message: message ?? "",
-                    show: show || true,
+                    message: action.payload as string,
+                    show: true,
                 },
             };
 
+        case REDUCER_ACTION_TYPE.KILL_NOTIFICATION:
+            return { ...state, notification: initState.notification };
+
         case REDUCER_ACTION_TYPE.LOG_OUT:
-            return {
-                user: { name: "", email: "", avatar: "" },
-                token: "",
-                surveys: [],
-                notification: {
-                    message: "",
-                    show: false,
-                },
-            };
+            return initState;
 
         default:
             throw new Error();
@@ -115,11 +110,19 @@ const useAppContext = (initState: AppState) => {
         dispatch({ type: REDUCER_ACTION_TYPE.SET_SURVEY, payload: surveys });
     }, []);
 
-    const showNotification = useCallback((notification: Notification) => {
+    const showNotification = useCallback((message: string) => {
         dispatch({
             type: REDUCER_ACTION_TYPE.SHOW_NOTIFICATION,
-            payload: notification,
+            payload: message,
         });
+
+        setTimeout(() => {
+            dispatch({
+                type: REDUCER_ACTION_TYPE.KILL_NOTIFICATION,
+                payload: "",
+            });
+        }, 5000);
+
     }, []);
 
     const logout = () => {
@@ -167,7 +170,7 @@ type UseAppHookType = {
     setToken: (token: string) => void;
     setUser: (user: User) => void;
     setSurvey: (surveys: Survey[]) => void;
-    showNotification: (notification: Notification) => void;
+    showNotification: (message: string) => void;
     logout: () => void;
 };
 
