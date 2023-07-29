@@ -7,9 +7,8 @@ import {
    QuestionListType,
    QuestionType,
 } from "../../types/survey";
-import CheckboxInput from "../atoms/CheckboxInput";
+
 import SelectBoxInput from "../atoms/SelectBoxInput";
-import RadioInput from "../atoms/RadioInput";
 
 import { useSurveyHook } from "../../contexts/SurveyContext";
 import { useAppHook } from "../../contexts/AppContext";
@@ -22,7 +21,6 @@ type PropTypes = {
 
 const QuestionEditor = ({ index = 0, question, addQuestion }: PropTypes) => {
    const [model, setModel] = useState<QuestionType>({ ...question });
-   const [radio, setRadio] = useState("");
 
    const { questionsType } = useAppHook();
    const { deleteQuestion, updateQuestion } = useSurveyHook();
@@ -34,9 +32,6 @@ const QuestionEditor = ({ index = 0, question, addQuestion }: PropTypes) => {
    function upperCaseFirst(str: QuestionListType) {
       return str.charAt(0).toUpperCase() + str.slice(1);
    }
-
-   const checkboxValues = ["React", "Laravel", "Next"];
-   const radioValues = ["React", "Laravel", "Next", "radio"];
 
    function onTypeChange(e: React.ChangeEvent<HTMLSelectElement>) {
       const type = e.target.value as QuestionListType;
@@ -50,12 +45,10 @@ const QuestionEditor = ({ index = 0, question, addQuestion }: PropTypes) => {
 
          const options: OptionsType[] = [];
 
-         if (type === "select") {
-            options.push({
-               uuid: uuidv4(),
-               text: "",
-            });
-         }
+         options.push({
+            uuid: uuidv4(),
+            text: "",
+         });
 
          newModel.data = { options };
       }
@@ -67,7 +60,7 @@ const QuestionEditor = ({ index = 0, question, addQuestion }: PropTypes) => {
       return ["select", "radio", "checkbox"].includes(type);
    }
 
-   function addSelectOptions() {
+   function addOptions() {
       const newOption = {
          uuid: uuidv4(),
          text: "",
@@ -175,61 +168,34 @@ const QuestionEditor = ({ index = 0, question, addQuestion }: PropTypes) => {
             {/* Question Type options */}
             <div>
                {shouldHaveOptions() && (
-                  <>
-                     {model.type === "checkbox" &&
-                        checkboxValues.map((option, index) => (
-                           <CheckboxInput
-                              key={index}
-                              data={option}
-                              question={model}
-                           />
-                        ))}
-
-                     {model.type === "select" && (
-                        <div>
-                           <h4 className="text-sm font-semibold mb-1 flex justify-between items-center ">
-                              Options
-                              <button
-                                 type="button"
-                                 onClick={addSelectOptions}
-                                 className="flex items-center text-xs py-1 px-2 rounded-sm text-white bg-gray-600 hover:bg-gray-700"
-                              >
-                                 Add
-                              </button>
-                           </h4>
-                           {!model.data.options.length ? (
-                              <div className="text-xs text-gray-600 text-center py-3">
-                                 You don't have any options defined
-                              </div>
-                           ) : (
-                              <div>
-                                 {model.data.options.map((data, ind) => (
-                                    <SelectBoxInput
-                                       key={data.uuid}
-                                       data={data}
-                                       index={ind}
-                                       question={model}
-                                    />
-                                 ))}
-                              </div>
-                           )}
+                  <div>
+                     <h4 className="text-sm font-semibold mb-1 flex justify-between items-center ">
+                        Options
+                        <button
+                           type="button"
+                           onClick={addOptions}
+                           className="flex items-center text-xs py-1 px-2 rounded-sm text-white bg-gray-600 hover:bg-gray-700"
+                        >
+                           Add
+                        </button>
+                     </h4>
+                     {!model.data.options.length ? (
+                        <div className="text-xs text-gray-600 text-center py-3">
+                           You don't have any options defined
                         </div>
-                     )}
-
-                     {model.type === "radio" && (
-                        <>
-                           {radioValues.map((val, ind) => (
-                              <RadioInput
-                                 key={ind}
-                                 data={val}
+                     ) : (
+                        <div>
+                           {model.data.options.map((data, ind) => (
+                              <SelectBoxInput
+                                 key={data.uuid}
+                                 data={data}
+                                 index={ind}
                                  question={model}
-                                 radio={radio}
-                                 setRadio={setRadio}
                               />
                            ))}
-                        </>
+                        </div>
                      )}
-                  </>
+                  </div>
                )}
             </div>
 
