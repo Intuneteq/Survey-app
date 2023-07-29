@@ -60,6 +60,11 @@ class SurveyController extends Controller
         return new SurveyResource($survey);
     }
 
+    public function findBySlug(Survey $survey)
+    {
+        return new SurveyResource($survey);
+    }
+
     public function update(UpdateSurveyRequest $request, Survey $survey)
     {
         $data = $request->validated();

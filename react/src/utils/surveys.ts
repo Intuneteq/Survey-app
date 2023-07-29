@@ -1,5 +1,5 @@
 import { axiosClient } from "../api/axios";
-import { CreateSurveyType, MetaType, Survey } from "../types/survey";
+import { SurveyType, MetaType, Survey } from "../types/survey";
 
 type ChildrenType = {
     url: string | undefined;
@@ -15,7 +15,7 @@ export default async ({
     setMeta,
     setSurvey,
     id
-}: ChildrenType): Promise<CreateSurveyType | void> => {
+}: ChildrenType): Promise<SurveyType | void> => {
     setLoading(true);
     try {
         const res = await axiosClient.get(url);

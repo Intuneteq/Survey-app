@@ -31,7 +31,7 @@ export type Survey = {
 };
 
 export type SurveyType = Partial<Survey> & {
-    image: globalThis.File | string;
+    image?: globalThis.File | string;
 };
 
 export type LinkType = {

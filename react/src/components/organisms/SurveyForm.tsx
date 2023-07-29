@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { PhotoIcon } from "@heroicons/react/24/outline";
+import { LinkIcon, PhotoIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 
@@ -8,7 +8,7 @@ import { SurveyType } from "../../types/survey";
 
 import PageComponent from "./PageComponent";
 import SurveyQuestions from "../molecules/SurveyQuestions";
-import TButton from "../atoms/TButton";
+import TButton, { Colors } from "../atoms/TButton";
 
 import { ApiError, axiosClient } from "../../api/axios";
 
@@ -55,6 +55,11 @@ const SurveyForm = ({ title, method, id }: SurveyForm) => {
 
       reader.readAsDataURL(file);
    };
+
+   const onDelete = () => {
+      console.log('deleted');
+      
+   }
 
    const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
@@ -106,8 +111,21 @@ const SurveyForm = ({ title, method, id }: SurveyForm) => {
 
    const isLoading = <p>Loading...</p>;
 
+   const buttons = (
+      <div className="flex gap-2">
+         <TButton color={Colors.GREEN} href={`/surveys/public/${survey.slug}`}>
+            <LinkIcon className="h-4 w-4 mr-2" />
+            Public Link
+         </TButton>
+         <TButton color={Colors.RED} onClick={onDelete}>
+            <TrashIcon className="h-4 w-4 mr-2" />
+            Delete
+         </TButton>
+      </div>
+   );
+
    const content = (
-      <PageComponent title={title}>
+      <PageComponent title={title} buttons={buttons}>
          <form
             action="#"
             method={method.toUpperCase()}
