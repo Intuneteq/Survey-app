@@ -1,0 +1,1 @@
+1. Change approach for adding options so you dont change the model state everytime text is updated

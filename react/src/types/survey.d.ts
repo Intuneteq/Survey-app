@@ -30,7 +30,7 @@ export type Survey = {
     questions: Array<QuestionType>
 };
 
-export type CreateSurveyType = Partial<Survey> & {
+export type SurveyType = Partial<Survey> & {
     image: globalThis.File | string;
 };
 
