@@ -20,11 +20,7 @@ type PropTypes = {
    addQuestion: (e: React.MouseEvent<HTMLElement>, index?: number) => void;
 };
 
-const QuestionEditor = ({
-   index = 0,
-   question,
-   addQuestion,
-}: PropTypes) => {
+const QuestionEditor = ({ index = 0, question, addQuestion }: PropTypes) => {
    const [model, setModel] = useState<QuestionType>({ ...question });
 
    const { questionsType } = useAppHook();
@@ -39,31 +35,49 @@ const QuestionEditor = ({
    }
 
    const checkboxValues = ["React", "Laravel", "Next"];
-   const radioValues = ["React", "Laravel", "Next"];
+   const radioValues = ["React", "Laravel", "Next", "radio"];
 
    function onTypeChange(e: React.ChangeEvent<HTMLSelectElement>) {
       const type = e.target.value as QuestionListType;
 
       const newModel = { ...model, type };
 
-      if (!shouldHaveOptions(model.type) && shouldHaveOptions(type)) {
-         if (!model.data.options) {
-            const options: OptionsType[] = [];
-            if (model.type === "checkbox") {
-               checkboxValues.forEach((item) => {
-                  options.push({
-                     uuid: uuidv4(),
-                     text: item,
-                  });
-               });
-            } else {
-               options.push({
-                  uuid: uuidv4(),
-                  text: "",
-               });
-            }
-            newModel.data = { options };
+      if (shouldHaveOptions(type)) {
+         if (newModel.data.options.length) {
+            newModel.data.options = [];
          }
+
+         const options: OptionsType[] = [];
+
+         if (type === "select") {
+            options.push({
+               uuid: uuidv4(),
+               text: "",
+            });
+         }
+
+         // if (type === "checkbox") {
+         //    checkboxValues?.forEach((item) => {
+         //       options.push({
+         //          uuid: uuidv4(),
+         //          text: item,
+         //       });
+         //    });
+         // } else if (type === "radio") {
+         //    radioValues?.forEach((item) => {
+         //       options.push({
+         //          uuid: uuidv4(),
+         //          text: item,
+         //       });
+         //    });
+         // } else {
+         //    options.push({
+         //       uuid: uuidv4(),
+         //       text: "",
+         //    });
+         // }
+
+         newModel.data = { options };
       }
 
       setModel(newModel);
@@ -73,36 +87,17 @@ const QuestionEditor = ({
       return ["select", "radio", "checkbox"].includes(type);
    }
 
-   function addOptions() {
-      console.log("add options");
+   function addSelectOptions() {
+      const newOption = {
+         uuid: uuidv4(),
+         text: "",
+      };
 
-      if (model.type === "checkbox") {
-         const newOption = checkboxValues.map((text) => {
-            return { uuid: uuidv4(), text };
-         });
-
-         setModel({
-            ...model,
-            data: {
-               options: [...model.data.options, ...newOption],
-            },
-         });
-      } else {
-         setModel({
-            ...model,
-            data: {
-               options: [
-                  ...model.data.options,
-                  {
-                     uuid: uuidv4(),
-                     text: "",
-                  },
-               ],
-            },
-         });
-      }
+      setModel({
+         ...model,
+         data: { options: [...model.data.options, newOption] },
+      });
    }
-
 
    return (
       <>
@@ -145,7 +140,7 @@ const QuestionEditor = ({
                      id="question"
                      value={model.question}
                      onChange={(e) => {
-                        setModel({ ...model, question: e.target.value })
+                        setModel({ ...model, question: e.target.value });
                      }}
                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   />
@@ -202,8 +197,12 @@ const QuestionEditor = ({
                {shouldHaveOptions() && (
                   <>
                      {model.type === "checkbox" &&
-                        checkboxValues.map((val, index) => (
-                           <CheckboxInput key={index} val={val} />
+                        checkboxValues.map((option, index) => (
+                           <CheckboxInput
+                              key={index}
+                              data={option}
+                              question={model}
+                           />
                         ))}
 
                      {model.type === "select" && (
@@ -212,7 +211,7 @@ const QuestionEditor = ({
                               Options
                               <button
                                  type="button"
-                                 onClick={addOptions}
+                                 onClick={addSelectOptions}
                                  className="flex items-center text-xs py-1 px-2 rounded-sm text-white bg-gray-600 hover:bg-gray-700"
                               >
                                  Add
@@ -225,7 +224,12 @@ const QuestionEditor = ({
                            ) : (
                               <div>
                                  {model.data.options.map((data, ind) => (
-                                    <SelectBoxInput key={data.uuid} data={data} index={ind} question={model} />
+                                    <SelectBoxInput
+                                       key={data.uuid}
+                                       data={data}
+                                       index={ind}
+                                       question={model}
+                                    />
                                  ))}
                               </div>
                            )}
