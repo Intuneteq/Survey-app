@@ -8,6 +8,7 @@ use App\Http\Requests\StoreSurveyRequest;
 use App\Http\Requests\UpdateSurveyRequest;
 use App\Http\Resources\SurveyResource;
 use App\Models\SurveyQuestion;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -62,6 +63,15 @@ class SurveyController extends Controller
 
     public function findBySlug(Survey $survey)
     {
+        if (!$survey->status) {
+            return response("survey is not active", 404);
+        }
+
+        $today = new DateTime();
+        $expire_date = new DateTime($survey->expire_date);
+
+        if ($today > $expire_date) return response("Survey expired", 404);
+
         return new SurveyResource($survey);
     }
 
