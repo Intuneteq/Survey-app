@@ -1,4 +1,6 @@
 1. Change approach for adding options so you dont change the model state everytime text is updated
 2. save the user info in temp storage if they dont complete answering the survey.(8:03:02)
 3. error page for components
-
+4. split dashboard index into multiple methods. 8:19:00
+5. SWITCH DASHBOARD CONTROLLER TO USER CONTROLLER. WE DONT NEED A DASHBOARD CONTROLLER
+6. work on show answers for dashboard
