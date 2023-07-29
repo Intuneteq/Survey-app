@@ -28,8 +28,6 @@ const PublicSurvey = () => {
 
       call();
    }, []);
-
-   console.log(survey);
    
 
    function answerChanged(question: QuestionType, value: string | string[]) {
@@ -63,13 +61,13 @@ const PublicSurvey = () => {
          >
             <div className="grid grid-cols-6">
                <div className="mr-4">
-                  {/* <img src={survey.image_url ?? ""} alt="" /> */}
+                  <img src={survey.image_url ?? ""} alt="" />
                </div>
 
                <div className="col-span-5">
-                  {/* <h1 className="text-3xl mb-3">{survey.title}</h1> */}
+                  <h1 className="text-3xl mb-3">{survey.title}</h1>
                   <p className="text-gray-500 text-sm mb-3">
-                     {/* Expire Date: {survey.expire_date as string} */}
+                     Expire Date: {survey.expire_date as string}
                   </p>
                   <p className="text-gray-500 text-sm mb-3">
                      {survey.description}
