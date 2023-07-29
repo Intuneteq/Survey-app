@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
-
-import { useAppHook } from "../../contexts/AppContext";
+import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 import {
    OptionsType,
    QuestionListType,
    QuestionType,
 } from "../../types/survey";
-import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import CheckboxInput from "../atoms/CheckboxInput";
 import SelectBoxInput from "../atoms/SelectBoxInput";
 import RadioInput from "../atoms/RadioInput";
+
 import { useSurveyHook } from "../../contexts/SurveyContext";
+import { useAppHook } from "../../contexts/AppContext";
 
 type PropTypes = {
    index: number;
@@ -22,6 +22,7 @@ type PropTypes = {
 
 const QuestionEditor = ({ index = 0, question, addQuestion }: PropTypes) => {
    const [model, setModel] = useState<QuestionType>({ ...question });
+   const [radio, setRadio] = useState("");
 
    const { questionsType } = useAppHook();
    const { deleteQuestion, updateQuestion } = useSurveyHook();
@@ -55,27 +56,6 @@ const QuestionEditor = ({ index = 0, question, addQuestion }: PropTypes) => {
                text: "",
             });
          }
-
-         // if (type === "checkbox") {
-         //    checkboxValues?.forEach((item) => {
-         //       options.push({
-         //          uuid: uuidv4(),
-         //          text: item,
-         //       });
-         //    });
-         // } else if (type === "radio") {
-         //    radioValues?.forEach((item) => {
-         //       options.push({
-         //          uuid: uuidv4(),
-         //          text: item,
-         //       });
-         //    });
-         // } else {
-         //    options.push({
-         //       uuid: uuidv4(),
-         //       text: "",
-         //    });
-         // }
 
          newModel.data = { options };
       }
@@ -239,7 +219,13 @@ const QuestionEditor = ({ index = 0, question, addQuestion }: PropTypes) => {
                      {model.type === "radio" && (
                         <>
                            {radioValues.map((val, ind) => (
-                              <RadioInput key={ind} data={val} />
+                              <RadioInput
+                                 key={ind}
+                                 data={val}
+                                 question={model}
+                                 radio={radio}
+                                 setRadio={setRadio}
+                              />
                            ))}
                         </>
                      )}

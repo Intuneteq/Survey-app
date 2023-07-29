@@ -11,10 +11,6 @@ const CheckboxInput = ({ data, question }: PropTypes) => {
 
    const { updateQuestion } = useSurveyHook();
 
-   function handleChecked(checked: boolean) {
-      setChecked(checked);
-   }
-
    const handleOptions = (): QuestionType => {
       // if check is true
       if (checked) {
@@ -47,12 +43,12 @@ const CheckboxInput = ({ data, question }: PropTypes) => {
                name={data}
                type="checkbox"
                checked={checked}
-               onChange={(e) => handleChecked(e.target.checked)}
+               onChange={(e) => setChecked(e.target.checked)}
                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
             />
          </div>
          <div className="text-sm leading-6">
-            <label htmlFor="comments" className="font-medium text-gray-900">
+            <label htmlFor="radio" className="font-medium text-gray-900">
                {data}
             </label>
          </div>

@@ -109,7 +109,7 @@ const SurveyForm = ({ title, method, id }: SurveyForm) => {
    const content = (
       <PageComponent title={title}>
          <form
-            // action="#"
+            action="#"
             method={method.toUpperCase()}
             onSubmit={(e) => onSubmit(e)}
          >
@@ -233,7 +233,7 @@ const SurveyForm = ({ title, method, id }: SurveyForm) => {
                      </div>
                      <div className="ml-3 text-sm">
                         <label
-                           htmlFor="comments"
+                           htmlFor="status"
                            className="font-medium text-gray-700"
                         >
                            Active
