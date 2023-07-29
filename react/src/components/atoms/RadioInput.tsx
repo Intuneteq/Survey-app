@@ -30,7 +30,7 @@ const RadioInput = ({ data, question, radio, setRadio }: PropTypes) => {
 
    useEffect(() => {
       if (id) {
-         setRadio(question.data.options[0].text ?? "");
+         setRadio(question.data.options[0]?.text ?? "");
       }
    }, []);
 

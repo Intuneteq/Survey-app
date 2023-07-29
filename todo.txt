@@ -1,1 +1,4 @@
 1. Change approach for adding options so you dont change the model state everytime text is updated
+2. save the user info in temp storage if they dont complete answering the survey.(8:03:02)
+3. error page for components
+

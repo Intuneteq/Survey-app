@@ -6,9 +6,11 @@ import getSurvey from "../../utils/surveys";
 import PublicQuestions from "../../components/molecules/PublicQuestions";
 
 import { QuestionType, SurveyType } from "../../types/survey";
+import { axiosClient } from "../../api/axios";
 
 const PublicSurvey = () => {
    const [survey, setSurvey] = useState<SurveyType>({ questions: [] });
+   const [surveyFinished, setSurveyFinished] = useState(false);
    const [loading, setLoading] = useState<boolean>(false);
    let answers: Record<number, any> = {};
 
@@ -27,33 +29,47 @@ const PublicSurvey = () => {
       call();
    }, []);
 
+   console.log(survey);
+   
+
    function answerChanged(question: QuestionType, value: string | string[]) {
       answers[question.id as number] = value;
    }
 
-   const onSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
+   const onSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
       ev.preventDefault();
-      console.log('submitted', answers);
-      
+      console.log("submitted", answers);
+
+      try {
+         await axiosClient.post(`/surveys/${survey.id}/answer`, {answers});
+         setSurveyFinished(true);
+      } catch (error: any) {
+         console.log(error);
+      }
    };
 
    if (loading) {
       return <div className="flex justify-center">....loading</div>;
    } else {
-      return (
+      return surveyFinished ? (
+         <div className="py-8 px-6 bg-emerald-500 text-white w-[600px] mx-auto">
+            Thank you for participating in the survey
+         </div>
+      ) : (
+         
          <form
             onSubmit={(ev) => onSubmit(ev)}
             className="container mx-auto p-4"
          >
             <div className="grid grid-cols-6">
                <div className="mr-4">
-                  <img src={survey.image_url} alt="" />
+                  {/* <img src={survey.image_url ?? ""} alt="" /> */}
                </div>
 
                <div className="col-span-5">
-                  <h1 className="text-3xl mb-3">{survey.title}</h1>
+                  {/* <h1 className="text-3xl mb-3">{survey.title}</h1> */}
                   <p className="text-gray-500 text-sm mb-3">
-                     Expire Date: {survey.expire_date as string}
+                     {/* Expire Date: {survey.expire_date as string} */}
                   </p>
                   <p className="text-gray-500 text-sm mb-3">
                      {survey.description}

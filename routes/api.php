@@ -16,6 +16,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Surveys
     Route::apiResource('surveys', SurveyController::class);
     Route::get('surveys/slugs/{survey:slug}', [SurveyController::class, 'findBySlug'])->withoutMiddleware('auth:sanctum');
+    Route::post('surveys/{survey}/answer', [SurveyController::class, 'storeAnswer'])->withoutMiddleware('auth:sanctum');
 });
 
 Route::post('/register', [AuthController::class, 'register']);

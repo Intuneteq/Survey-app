@@ -18,9 +18,9 @@ const PublicQuestions = ({ question, index, answerChanged }: PropsType) => {
       e.preventDefault();
 
       if (e.target.checked) {
-         selectedOptions.push(option.uuid);
+         selectedOptions.push(option.text);
       } else {
-         selectedOptions.filter((op) => op !== option.uuid);
+         selectedOptions.filter((op) => op !== option.text);
       }
       answerChanged(selectedOptions);
    }
