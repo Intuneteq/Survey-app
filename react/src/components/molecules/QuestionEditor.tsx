@@ -103,12 +103,6 @@ const QuestionEditor = ({
       }
    }
 
-   // function deleteOption(op: OptionsType) {
-   //     model.data.options = model.data.options.filter(
-   //         (option) => option.uuid != op.uuid
-   //     );
-   //     setModel({ ...model });
-   // }
 
    return (
       <>
@@ -231,7 +225,7 @@ const QuestionEditor = ({
                            ) : (
                               <div>
                                  {model.data.options.map((data, ind) => (
-                                    <SelectBoxInput data={data} index={ind} />
+                                    <SelectBoxInput key={data.uuid} data={data} index={ind} question={model} />
                                  ))}
                               </div>
                            )}
@@ -240,8 +234,8 @@ const QuestionEditor = ({
 
                      {model.type === "radio" && (
                         <>
-                           {radioValues.map((val) => (
-                              <RadioInput data={val} />
+                           {radioValues.map((val, ind) => (
+                              <RadioInput key={ind} data={val} />
                            ))}
                         </>
                      )}
