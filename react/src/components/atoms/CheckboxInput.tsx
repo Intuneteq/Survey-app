@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { QuestionType } from "../../types/survey";
 import { useSurveyHook } from "../../contexts/SurveyContext";
+import { useParams } from "react-router-dom";
 
 type PropTypes = { data: string; question: QuestionType };
 
@@ -11,17 +12,17 @@ const CheckboxInput = ({ data, question }: PropTypes) => {
 
    const { updateQuestion } = useSurveyHook();
 
+   const { id } = useParams();
+
    const handleOptions = (): QuestionType => {
       // if check is true
       if (checked) {
-
          const newOption = {
             uuid: uuidv4(),
             text: data,
          };
 
          question.data.options = [...question.data.options, newOption];
-
       } else {
          question.data.options = question.data.options.filter(
             (item) => item.text !== data
@@ -30,6 +31,16 @@ const CheckboxInput = ({ data, question }: PropTypes) => {
 
       return question;
    };
+
+   useEffect(() => {
+      if (id) {
+         question.data.options.forEach((item) => {
+            if(item.text === data) {
+               setChecked(true)
+            }
+         })
+      }
+   }, []);
 
    useEffect(() => {
       updateQuestion(handleOptions());

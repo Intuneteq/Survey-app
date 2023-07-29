@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { QuestionType } from "../../types/survey";
 import { useSurveyHook } from "../../contexts/SurveyContext";
+import { useParams } from "react-router-dom";
 
 type PropTypes = {
    data: string;
@@ -13,7 +14,9 @@ type PropTypes = {
 
 const RadioInput = ({ data, question, radio, setRadio }: PropTypes) => {
    const { updateQuestion } = useSurveyHook();
-   
+
+   const { id } = useParams();
+
    const handleOptions = (): QuestionType => {
       const newOption = {
          uuid: uuidv4(),
@@ -24,6 +27,12 @@ const RadioInput = ({ data, question, radio, setRadio }: PropTypes) => {
 
       return question;
    };
+
+   useEffect(() => {
+      if (id) {
+         setRadio(question.data.options[0].text ?? "");
+      }
+   }, []);
 
    useEffect(() => {
       if (radio) {

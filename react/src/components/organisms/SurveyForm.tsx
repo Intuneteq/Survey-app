@@ -1,6 +1,6 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { PhotoIcon } from "@heroicons/react/24/outline";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 
 import { ErrorObj } from "../../types/auth";
@@ -10,7 +10,7 @@ import PageComponent from "./PageComponent";
 import SurveyQuestions from "../molecules/SurveyQuestions";
 import TButton from "../atoms/TButton";
 
-import { ApiError } from "../../api/axios";
+import { ApiError, axiosClient } from "../../api/axios";
 
 import showError from "../../utils/errors";
 import getSurveys from "../../utils/surveys";
@@ -25,7 +25,7 @@ type SurveyForm = {
 };
 
 const SurveyForm = ({ title, method, id }: SurveyForm) => {
-   // const navigate = useNavigate();
+   const navigate = useNavigate();
    const { showNotification } = useAppHook();
    const {
       state: survey,
@@ -71,13 +71,13 @@ const SurveyForm = ({ title, method, id }: SurveyForm) => {
 
       try {
          if (id) {
-            // await axiosClient.put(`/surveys/${id}`, data);
+            await axiosClient.put(`/surveys/${id}`, data);
             showNotification("The survey was updated");
          } else {
-            // await axiosClient.post("/surveys", data);
+            await axiosClient.post("/surveys", data);
             showNotification("The survey was created");
          }
-         // navigate("/surveys");
+         navigate("/surveys");
       } catch (error: any) {
          const axiosError: AxiosError<ApiError> = error;
 
