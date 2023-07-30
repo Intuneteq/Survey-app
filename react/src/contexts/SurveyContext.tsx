@@ -26,6 +26,7 @@ const enum REDUCER_ACTION_TYPE {
    SET_IMAGE_URL,
    SET_EXPIRE_DATE,
    SET_QUESTION,
+   CLEAR_SURVEY,
    DELETE_QUESTION,
    UPDATE_QUESTION,
    SET_SURVEY,
@@ -102,6 +103,9 @@ const reducer = (state: SurveyType, action: ReducerAction): SurveyType => {
       case REDUCER_ACTION_TYPE.SET_SURVEY:
          return { ...(action.payload as SurveyType) };
 
+      case REDUCER_ACTION_TYPE.CLEAR_SURVEY:
+         return surveyInitState;
+
       default:
          throw new Error();
    }
@@ -167,6 +171,10 @@ const useSurveyContext = (initState: SurveyType) => {
       dispatch({ type: REDUCER_ACTION_TYPE.SET_SURVEY, payload: survey });
    }, []);
 
+   const clearSurvey = () => {
+      dispatch({ type: REDUCER_ACTION_TYPE.CLEAR_SURVEY, payload: "" });
+   };
+
    return {
       state,
       setStatus,
@@ -179,6 +187,7 @@ const useSurveyContext = (initState: SurveyType) => {
       deleteQuestion,
       updateQuestion,
       setSurvey,
+      clearSurvey
    };
 };
 
@@ -200,6 +209,7 @@ const initContextState: UseSurveyContextType = {
    deleteQuestion: () => {},
    updateQuestion: () => {},
    setSurvey: () => {},
+   clearSurvey: () => {},
 };
 
 const SurveyContext = createContext<UseSurveyContextType>(initContextState);
@@ -224,6 +234,7 @@ type UseSurveyHookType = {
    deleteQuestion: (question: QuestionType) => void;
    updateQuestion: (question: QuestionType) => void;
    setSurvey: (survey: SurveyType) => void;
+   clearSurvey: () => void;
 };
 
 export const useSurveyHook = (): UseSurveyHookType => {
@@ -239,6 +250,7 @@ export const useSurveyHook = (): UseSurveyHookType => {
       deleteQuestion,
       updateQuestion,
       setExpireDate,
+      clearSurvey
    } = useContext(SurveyContext);
 
    return {
@@ -253,5 +265,6 @@ export const useSurveyHook = (): UseSurveyHookType => {
       deleteQuestion,
       updateQuestion,
       setSurvey,
+      clearSurvey
    };
 };

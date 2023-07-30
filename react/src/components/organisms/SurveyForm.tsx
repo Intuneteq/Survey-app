@@ -36,6 +36,7 @@ const SurveyForm = ({ title, method, id }: SurveyForm) => {
       setExpireDate,
       setStatus,
       setSurvey,
+      clearSurvey
    } = useSurveyHook();
 
    const [loading, setLoading] = useState(false);
@@ -82,6 +83,7 @@ const SurveyForm = ({ title, method, id }: SurveyForm) => {
             await axiosClient.post("/surveys", data);
             showNotification("The survey was created");
          }
+         clearSurvey();
          navigate("/surveys");
       } catch (error: any) {
          const axiosError: AxiosError<ApiError> = error;

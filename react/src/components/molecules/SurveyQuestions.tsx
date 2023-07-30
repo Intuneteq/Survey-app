@@ -1,7 +1,7 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { v4 as uuidv4 } from "uuid";
 
-import QuestionEditor from "./QuestionEditor";
+import QuestionEditor from "../organisms/QuestionEditor";
 
 import { QuestionType } from "../../types/survey";
 import { useSurveyHook } from "../../contexts/SurveyContext";

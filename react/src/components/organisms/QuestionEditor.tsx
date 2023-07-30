@@ -40,7 +40,8 @@ const QuestionEditor = ({ index = 0, question, addQuestion }: PropTypes) => {
 
       if (shouldHaveOptions(type)) {
          if (newModel.data.options.length) {
-            newModel.data.options = [];
+            setModel(newModel);
+            return;
          }
 
          const options: OptionsType[] = [];
