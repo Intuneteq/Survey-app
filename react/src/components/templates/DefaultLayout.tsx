@@ -44,7 +44,7 @@ export default function DefaultLayout() {
       e.preventDefault();
 
       try {
-         await axiosClient.post("/logout", null);
+         await axiosClient.post("/auth/logout", null);
          logOut();
       } catch (error) {
          console.log(error);

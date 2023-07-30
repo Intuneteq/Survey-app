@@ -18,7 +18,7 @@ const Dashboard = () => {
 
       const getData = async () => {
          try {
-            const res = await axiosClient.get("/dashboard");
+            const res = await axiosClient.get("/users/dashboard");
             setData(res.data);
          } catch (error) {
             console.log(error);

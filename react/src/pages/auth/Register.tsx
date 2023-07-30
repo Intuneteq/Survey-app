@@ -29,7 +29,7 @@ const Register = () => {
         };
 
         try {
-            const { data: res } = await axiosClient.post("/register", data);
+            const { data: res } = await axiosClient.post("/auth/register", data);
 
             setUser(res.user);
             setToken(res.token);

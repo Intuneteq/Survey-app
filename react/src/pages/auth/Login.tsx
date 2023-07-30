@@ -21,7 +21,7 @@ const Login = () => {
         const data = { email, password };
 
         try {
-            const { data: res } = await axiosClient.post("/login", data);
+            const { data: res } = await axiosClient.post("/auth/login", data);
 
             setUser(res.user);
             setToken(res.token);
