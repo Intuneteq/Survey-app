@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\ApiException;
+use App\Exceptions\BadRequestException;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
@@ -35,12 +37,10 @@ class AuthController extends Controller
         unset($credentials['remember']);
 
         if (!Auth::attempt($credentials, $remember)) {
-            return response([
-                'error' => 'The Provided credentials are not correct'
-            ], 422);
+            throw new BadRequestException('The Provided credentials are not correct');
         }
 
-         /** @var \App\Models\User $user **/
+        /** @var \App\Models\User $user **/
         $user = Auth::user();
         $token = $user->createToken('main')->plainTextToken;
 
@@ -52,7 +52,7 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-       /** @var \App\Models\User $user **/
+        /** @var \App\Models\User $user **/
         $user = Auth::user();
 
         // Revoke the token that was used to authenticate the current request...
