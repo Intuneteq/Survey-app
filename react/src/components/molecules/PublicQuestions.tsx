@@ -29,7 +29,7 @@ const PublicQuestions = ({ question, index, answerChanged }: PropsType) => {
          <fieldset className="mb-4">
             <div>
                <legend className="text-base font-medium text-gray-900">
-                  {index}
+                  {index + 1}
                </legend>
                <p className="text-gray text-sm">{question.description}</p>
             </div>
