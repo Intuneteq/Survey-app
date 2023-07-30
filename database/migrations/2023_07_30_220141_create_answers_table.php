@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('answers', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->foreignIdFor(\App\Models\Survey::class, 'survey_id');
+            $table->timestamp('start_date')->nullable();
+            $table->timestamp('end_date')->nullable();
         });
     }
 
@@ -25,3 +27,6 @@ return new class extends Migration
         Schema::dropIfExists('answers');
     }
 };
+
+
+
