@@ -17,6 +17,7 @@ import getSurveys from "../../utils/surveys";
 
 import { useAppHook } from "../../contexts/AppContext";
 import { useSurveyHook } from "../../contexts/SurveyContext";
+import FormSkeleton from "../skeletons/FormSkeleton";
 
 type SurveyForm = {
    title: string;
@@ -36,7 +37,7 @@ const SurveyForm = ({ title, method, id }: SurveyForm) => {
       setExpireDate,
       setStatus,
       setSurvey,
-      clearSurvey
+      clearSurvey,
    } = useSurveyHook();
 
    const [loading, setLoading] = useState(false);
@@ -58,9 +59,8 @@ const SurveyForm = ({ title, method, id }: SurveyForm) => {
    };
 
    const onDelete = () => {
-      console.log('deleted');
-      
-   }
+      console.log("deleted");
+   };
 
    const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
@@ -97,6 +97,8 @@ const SurveyForm = ({ title, method, id }: SurveyForm) => {
    };
 
    useEffect(() => {
+      clearSurvey();
+
       if (id) {
          async function call() {
             const survey = (await getSurveys({
@@ -111,7 +113,7 @@ const SurveyForm = ({ title, method, id }: SurveyForm) => {
       }
    }, []);
 
-   const isLoading = <p>Loading...</p>;
+   const isLoading = <FormSkeleton />;
 
    const buttons = (
       <div className="flex gap-2">
@@ -207,7 +209,7 @@ const SurveyForm = ({ title, method, id }: SurveyForm) => {
                      >
                         Description
                      </label>
-                     {/* <pre>{ JSON.stringify(survey, undefined, 2) }</pre> */}
+                     
                      <textarea
                         name="description"
                         id="description"

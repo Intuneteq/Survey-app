@@ -7,6 +7,7 @@ import DashboardCard from "../../components/molecules/DashboardCard";
 
 import { axiosClient } from "../../api/axios";
 import { DashboardDataType } from "../../types/user";
+import SurveySkeleton from "../../components/skeletons/SurveySkeleton";
 
 const Dashboard = () => {
    const [loading, setLoading] = useState(false);
@@ -28,9 +29,17 @@ const Dashboard = () => {
       getData();
    }, []);
 
+   const loadingContent = (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+         {[...Array(3).keys()].map((i) => {
+            return <SurveySkeleton key={i} />;
+         })}
+      </div>
+   );
+
    return (
       <PageComponent title="Dashboard">
-         {loading && <div className="flex justify-center">Loading...</div>}
+         {loading && loadingContent}
          {!loading && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 text-gray-700">
                <DashboardCard

@@ -49,12 +49,9 @@ const Surveys = () => {
 
    const loadingContent = (
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
-         <SurveySkeleton />
-         <SurveySkeleton />
-         <SurveySkeleton />
-         <SurveySkeleton />
-         <SurveySkeleton />
-         <SurveySkeleton />
+         {[...Array(6).keys()].map((i) => {
+            return <SurveySkeleton key={i} />;
+         })}
       </div>
    );
 
