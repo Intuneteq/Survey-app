@@ -10,12 +10,14 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function me(Request $request) {
+    public function me(Request $request)
+    {
         return $request->user();
     }
 
-    public function dashboard(Request $request) {
-       // Find user
+    public function dashboard(Request $request)
+    {
+        // Find user
         $user = $request->user();
 
         // Total number of surveys

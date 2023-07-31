@@ -42,19 +42,7 @@ class SurveyController extends Controller
 
         $survey = $repository->create($data);
 
-        // // Create survey
-        // $survey = Survey::create($data);
-
-        // // Create new questions
-        // // TODO: WRAP IN TRANSACTION
-        // foreach ($data['questions'] as $question) {
-        //     $question['survey_id'] = $survey->id;
-        //     $this->createQuestion($question);
-        // }
-
-        return $survey;
-
-        // return new SurveyResource($survey);
+        return new SurveyResource($survey);
     }
 
     public function show(Survey $survey, Request $request)

@@ -4,3 +4,10 @@
 4. split dashboard index into multiple methods. 8:19:00
 5. SWITCH DASHBOARD CONTROLLER TO USER CONTROLLER. WE DONT NEED A DASHBOARD CONTROLLER
 6. work on show answers for dashboard
+
+
+// Backend features
+1. repository pattern
+2. Db TRANSACTION
+3. exception classes
+4. uuid instead of incremental ids
