@@ -28,17 +28,17 @@ class UserController extends Controller
 
         // Total Number of answers
         $totalAnswers = Answer::query()
-            ->join('surveys', 'survey_answers.survey_id', '=', 'surveys.id')
+            ->join('surveys', 'answers.survey_id', '=', 'surveys.id')
             ->where('surveys.user_id', $user->id)
             ->count();
 
 
         $latestAnswers = Answer::query()
-            ->join('surveys', 'survey_answers.survey_id', '=', 'surveys.id')
+            ->join('surveys', 'answers.survey_id', '=', 'surveys.id')
             ->where('surveys.user_id', $user->id)
             ->orderBy('end_date', 'DESC')
             ->limit(5)
-            ->getModels('survey_answers.*');
+            ->getModels('answers.*');
 
         return [
             'totalSurveys' => $total,
