@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\SurveyAnswerResource;
 use App\Http\Resources\SurveyResourceDashboard;
 use App\Models\Survey;
-use App\Models\SurveyAnswer;
+use App\Models\Answer;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -25,13 +25,13 @@ class UserController extends Controller
         $latest = Survey::query()->where('user_id', $user->id)->latest('created_at')->first();
 
         // Total Number of answers
-        $totalAnswers = SurveyAnswer::query()
+        $totalAnswers = Answer::query()
             ->join('surveys', 'survey_answers.survey_id', '=', 'surveys.id')
             ->where('surveys.user_id', $user->id)
             ->count();
 
 
-        $latestAnswers = SurveyAnswer::query()
+        $latestAnswers = Answer::query()
             ->join('surveys', 'survey_answers.survey_id', '=', 'surveys.id')
             ->where('surveys.user_id', $user->id)
             ->orderBy('end_date', 'DESC')

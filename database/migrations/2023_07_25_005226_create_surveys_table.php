@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('surveys', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->foreignIdFor(\App\Models\User::class, 'user_id');
             $table->string('image', 255)->nullable();
             $table->string('title', 1000);
@@ -17,7 +17,7 @@ return new class extends Migration
             $table->tinyInteger('status');
             $table->text('description')->nullable();
             $table->timestamps();
-            $table->timestamp('expire_date')->nullable();
+            $table->timestamp('expire_date');
         });
     }
 
