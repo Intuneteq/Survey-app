@@ -12,10 +12,14 @@ use App\Http\Resources\SurveyResource;
 use App\Repositories\SurveyRepository;
 use DateTime;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 
 class SurveyController extends Controller
 {
+    public function __construct(
+        protected SurveyRepository $repository
+    ) {
+    }
+
     public function index(Request $request)
     {
         $user = $request->user();
@@ -25,11 +29,11 @@ class SurveyController extends Controller
         );
     }
 
-    public function store(StoreSurveyRequest $request, SurveyRepository $repository)
+    public function store(StoreSurveyRequest $request)
     {
         $data = $request->validated();
 
-        $survey = $repository->create($data);
+        $survey = $this->repository->create($data);
 
         return new SurveyResource($survey);
     }
@@ -60,11 +64,11 @@ class SurveyController extends Controller
         return new SurveyResource($survey);
     }
 
-    public function update(UpdateSurveyRequest $request, Survey $survey, SurveyRepository $repository)
+    public function update(UpdateSurveyRequest $request, Survey $survey)
     {
         $data = $request->validated();
 
-        $survey = $repository->update($survey, $data);
+        $survey = $this->repository->update($survey, $data);
 
         return new SurveyResource($survey);
     }
@@ -73,16 +77,10 @@ class SurveyController extends Controller
     {
         $user = $request->user();
         if ($user->id !== $survey->user_id) {
-            return abort(403, 'Unauthorized action.');
+            throw new UnAuthorizedException('Unauthorized action.');
         }
 
-        $survey->delete();
-
-        // If there is an old image, delete it
-        if ($survey->image) {
-            $absolutePath = public_path($survey->image);
-            File::delete($absolutePath);
-        }
+        $this->repository->forceDelete($survey);
 
         return response('', 204);
     }

@@ -102,8 +102,17 @@ class SurveyRepository
         return $survey;
     }
 
-    public function forceDelete()
+    public function forceDelete(Survey $survey)
     {
+        $deleted = $survey->delete();
+
+        // If there is an old image, delete it
+        if ($survey->image) {
+            $absolutePath = public_path($survey->image);
+            File::delete($absolutePath);
+        }
+
+        return $deleted;
     }
 
     private function saveImage($image)

@@ -13,6 +13,7 @@ Route::group([
     Route::get('/{survey}', [SurveyController::class, 'show']);
     Route::post('/', [SurveyController::class, 'store']);
     Route::put('/{survey}', [SurveyController::class, 'update']);
+    Route::delete('/{survey}', [SurveyController::class, 'destroy']);
 
     Route::get('/slugs/{survey:slug}', [SurveyController::class, 'findBySlug'])->withoutMiddleware('auth:sanctum');
     Route::post('/{survey}/answer', [SurveyController::class, 'storeAnswer'])->withoutMiddleware('auth:sanctum');
