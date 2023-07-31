@@ -19,8 +19,9 @@ class Answer extends Model
 
     protected $fillable = ['survey_id', 'start_date', 'end_date'];
 
-    // const CREATED_AT = null;
-    // const UPDATED_AT = null;
+    // Set this if timestamp is not added in migration schema
+    const CREATED_AT = null;
+    const UPDATED_AT = null;
 
     public function survey()
     {

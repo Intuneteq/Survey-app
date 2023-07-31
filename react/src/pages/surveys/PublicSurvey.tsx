@@ -39,7 +39,7 @@ const PublicSurvey = () => {
       console.log("submitted", answers);
 
       try {
-         await axiosClient.post(`/surveys/${survey.id}/answer`, {answers});
+         await axiosClient.post(`/answers/surveys/${survey.id}`, {answers});
          setSurveyFinished(true);
       } catch (error: any) {
          console.log(error);

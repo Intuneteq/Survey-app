@@ -16,5 +16,4 @@ Route::group([
     Route::delete('/{survey}', [SurveyController::class, 'destroy']);
 
     Route::get('/slugs/{survey:slug}', [SurveyController::class, 'findBySlug'])->withoutMiddleware('auth:sanctum');
-    Route::post('/{survey}/answer', [SurveyController::class, 'storeAnswer'])->withoutMiddleware('auth:sanctum');
 });

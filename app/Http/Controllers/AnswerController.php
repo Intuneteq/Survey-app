@@ -2,63 +2,50 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\BadRequestException;
 use App\Models\Answer;
 use App\Http\Requests\StoreAnswerRequest;
 use App\Http\Requests\UpdateAnswerRequest;
+use App\Models\Question;
+use App\Models\Survey;
+use App\Models\SurveyQuestionAnswer;
+use App\Repositories\AnswerRepository;
 
 class AnswerController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct(
+        protected AnswerRepository $answerRepository
+    ) {
+    }
+
     public function index()
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+
+    public function store(StoreAnswerRequest $request, Survey $survey)
     {
-        //
+        $validated = $request->validated();
+
+       $answer = $this->answerRepository->create($survey, $validated);
+
+        return response("", 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreAnswerRequest $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Answer $answer)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Answer $answer)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateAnswerRequest $request, Answer $answer)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(Answer $answer)
     {
         //
