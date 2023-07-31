@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AnswerResource;
 use App\Http\Resources\SurveyResourceDashboard;
 use App\Models\Survey;
 use App\Models\Answer;
@@ -43,7 +44,7 @@ class UserController extends Controller
             'totalSurveys' => $total,
             'latestSurveys' => $latest ? new SurveyResourceDashboard($latest) : null,
             'totalAnswers' => $totalAnswers,
-            'latestAnswers' => Answer::collection($latestAnswers)
+            'latestAnswers' => AnswerResource::collection($latestAnswers)
         ];
     }
 }
