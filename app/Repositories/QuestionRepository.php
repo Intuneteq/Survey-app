@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Enums\QuestionTypeEnum;
+use App\Exceptions\UnprocessableException;
 use App\Models\Question;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Enum;
@@ -23,6 +24,10 @@ class QuestionRepository
             'survey_id' => 'exists:\App\Models\Survey,id'
         ]);
 
+        if ($validator->fails()) {
+            throw new UnprocessableException($validator->errors()->first());
+        }
+
         return Question::create($validator->validated());
     }
 
@@ -39,6 +44,10 @@ class QuestionRepository
             'description' => 'nullable|string',
             'data' => 'present',
         ]);
+
+        if ($validator->fails()) {
+            throw new UnprocessableException($validator->errors()->first());
+        }
 
         return $question->update($validator->validated());
     }
