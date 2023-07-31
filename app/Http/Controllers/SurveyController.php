@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\NotFoundException;
+use App\Exceptions\UnAuthorizedException;
 use App\Http\Requests\StoreSurveyAnswerRequest;
 use App\Models\Survey;
 use App\Http\Requests\StoreSurveyRequest;
@@ -10,7 +12,6 @@ use App\Http\Resources\SurveyResource;
 use App\Repositories\SurveyRepository;
 use DateTime;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 
 class SurveyController extends Controller
@@ -39,7 +40,7 @@ class SurveyController extends Controller
 
         // Validate user created survey
         if ($user->id !== $survey->user_id) {
-            return abort(403, 'Unauthorized action');
+            throw new UnAuthorizedException('Unauthorized action');
         }
 
         return new SurveyResource($survey);
@@ -48,69 +49,22 @@ class SurveyController extends Controller
     public function findBySlug(Survey $survey)
     {
         if (!$survey->status) {
-            return response("survey is not active", 404);
+            throw new NotFoundException('survey is not active');
         }
 
         $today = new DateTime();
         $expire_date = new DateTime($survey->expire_date);
 
-        if ($today > $expire_date) return response("Survey expired", 404);
+        if ($today > $expire_date) throw new NotFoundException('Survey expired');
 
         return new SurveyResource($survey);
     }
 
-    public function update(UpdateSurveyRequest $request, Survey $survey)
+    public function update(UpdateSurveyRequest $request, Survey $survey, SurveyRepository $repository)
     {
         $data = $request->validated();
 
-        // // Check if image was given and save on local file system.
-        // if (isset($data['image'])) {
-        //     $relativePath = $this->saveImage($data['image']);
-        //     $data['image'] = $relativePath;
-
-        //     // If there is an old image, delete it.
-        //     if ($survey->image) {
-        //         $absolutePath = public_path($survey->image);
-
-        //         File::delete($absolutePath);
-        //     }
-        // }
-
-        // $survey->update($data);
-
-        // // Get ids as plain array of existing questions
-        // $existingIds = $survey->questions()->pluck('id')->toArray();
-
-        // // Get Id as plain array of new questions
-        // $newIds = Arr::pluck($data['questions'], 'id');
-
-        // // Find Questions to delete
-        // $toDelete = array_diff($existingIds, $newIds);
-
-        // // Find Questions to add
-        // $toAdd = array_diff($newIds, $existingIds);
-
-        // // Delete Questions in toDelete Array
-        // SurveyQuestion::destroy($toDelete);
-
-        // // Create new questions
-        // foreach ($data['questions'] as $question) {
-        //     if (in_array($question['id'], $toAdd)) {
-        //         $question['survey_id'] = $survey->id;
-        //         $this->createQuestion($question);
-        //     }
-        // }
-
-        // // Update existing questions
-        // $questionMap = collect($data['questions'])->keyBy('id');
-
-
-
-        // foreach ($survey->questions as $question) {
-        //     if (isset($questionMap[$question->id])) {
-        //         $this->updateQuestion($question, $questionMap[$question->id]);
-        //     }
-        // }
+        $survey = $repository->update($survey, $data);
 
         return new SurveyResource($survey);
     }
@@ -132,24 +86,6 @@ class SurveyController extends Controller
 
         return response('', 204);
     }
-
-    // private function updateQuestion(SurveyQuestion $question, $data)
-    // {
-    //     // // dd('updating question', $data);
-    //     // if (is_array($data['data'])) {
-    //     //     $data['data'] = json_encode($data['data']);
-    //     // }
-
-    //     // $validator = Validator::make($data, [
-    //     //     'id' => 'exists:App\Models\SurveyQuestion,id',
-    //     //     'question' => 'required|string',
-    //     //     'type' => ['required', new Enum(QuestionTypeEnum::class)],
-    //     //     'description' => 'nullable|string',
-    //     //     'data' => 'present',
-    //     // ]);
-
-    //     // return $question->update($validator->validated());
-    // }
 
     public function storeAnswer(Survey $survey, StoreSurveyAnswerRequest $request)
     {

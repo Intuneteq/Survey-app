@@ -3,7 +3,9 @@
 namespace App\Repositories;
 
 use App\Exceptions\BadRequestException;
+use App\Models\Question;
 use App\Models\Survey;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -44,8 +46,60 @@ class SurveyRepository
         return $survey;
     }
 
-    public function update()
+    public function update(Survey $survey, array $data)
     {
+        $survey = DB::transaction(function () use ($survey, $data) {
+            // Check if image was given and save on local file system.
+            if (isset($data['image'])) {
+                $relativePath = $this->saveImage($data['image']);
+                $data['image'] = $relativePath;
+
+                // If there is an old image, delete it.
+                if ($survey->image) {
+                    $absolutePath = public_path($survey->image);
+
+                    File::delete($absolutePath);
+                }
+            }
+
+            $survey->update($data);
+
+            // Get ids as plain array of existing questions
+            $existingIds = $survey->questions()->pluck('id')->toArray();
+
+            // Get Id as plain array of new questions
+            $newIds = Arr::pluck($data['questions'], 'id');
+
+            // Find Questions to delete
+            $toDelete = array_diff($existingIds, $newIds);
+
+            // Find Questions to add
+            $toAdd = array_diff($newIds, $existingIds);
+
+            // Delete Questions in toDelete Array
+            Question::destroy($toDelete);
+
+            // Create new questions
+            foreach ($data['questions'] as $question) {
+                if (in_array($question['id'], $toAdd)) {
+                    $question['survey_id'] = $survey->id;
+                    $this->questionRepository->create($question);
+                }
+            }
+
+            // Update existing questions
+            $questionMap = collect($data['questions'])->keyBy('id');
+
+
+            foreach ($survey->questions as $question) {
+                if (isset($questionMap[$question->id])) {
+                    $this->questionRepository->update($question, $questionMap[$question->id]);
+                }
+            }
+            return $survey;
+        });
+
+        return $survey;
     }
 
     public function forceDelete()

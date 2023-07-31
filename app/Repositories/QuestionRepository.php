@@ -11,7 +11,7 @@ class QuestionRepository
 {
     public function create(array $data)
     {
-         if (is_array($data['data'])) {
+        if (is_array($data['data'])) {
             $data['data'] = json_encode($data['data']);
         }
 
@@ -24,11 +24,23 @@ class QuestionRepository
         ]);
 
         return Question::create($validator->validated());
-
     }
 
-    public function update()
+    public function update(Question $question, array $data)
     {
+        if (is_array($data['data'])) {
+            $data['data'] = json_encode($data['data']);
+        }
+
+        $validator = Validator::make($data, [
+            'id' => 'exists:App\Models\Question,id',
+            'question' => 'required|string',
+            'type' => ['required', new Enum(QuestionTypeEnum::class)],
+            'description' => 'nullable|string',
+            'data' => 'present',
+        ]);
+
+        return $question->update($validator->validated());
     }
 
     public function forceDelete()
