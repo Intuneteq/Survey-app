@@ -8,6 +8,7 @@ import axios, {
 export interface ApiError {
     errors: Array<string[]>;
     error: string;
+    message: string;
 }
 
 export const axiosClient = axios.create({

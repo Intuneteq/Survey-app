@@ -13,7 +13,7 @@ const showError = (error: AxiosResponse<ApiError>): ErrorObj => {
 
         return { __html: finalErrors.join("<br>") };
     } else {
-        return { __html: error.data.error };
+        return { __html: error.data.message };
     }
 };
 
