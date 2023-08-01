@@ -42,7 +42,7 @@ class AuthController extends Controller
 
         /** @var \App\Models\User $user **/
         $user = Auth::user();
-        
+
         $token = $user->createToken('main')->accessToken;
 
         return new JsonResponse([
