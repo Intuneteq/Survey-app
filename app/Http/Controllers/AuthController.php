@@ -22,7 +22,7 @@ class AuthController extends Controller
             'password' => bcrypt($data['password'])
         ]);
 
-        $token = $user->createToken('main')->plainTextToken;
+        $token = $user->createToken('main')->accessToken;
 
         return response([
             'user' => $user,
@@ -42,7 +42,8 @@ class AuthController extends Controller
 
         /** @var \App\Models\User $user **/
         $user = Auth::user();
-        $token = $user->createToken('main')->plainTextToken;
+        
+        $token = $user->createToken('main')->accessToken;
 
         return new JsonResponse([
             'user' => $user,

@@ -7,7 +7,7 @@ Route::group([
     'as' => 'user.',
     'namespace' => "\App\Http\Controllers",
     'prefix' => 'users',
-    'middleware' => 'auth:sanctum'
+    'middleware' => 'auth:api'
 ], function () {
     Route::get('/me', [UserController::class, 'me']);
 

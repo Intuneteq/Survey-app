@@ -7,7 +7,7 @@ Route::group([
     'as' => 'survey.',
     'namespace' => "\App\Http\Controllers",
     'prefix' => 'surveys',
-    'middleware' => 'auth:sanctum'
+    'middleware' => 'auth:api'
 ], function () {
     Route::get('/', [SurveyController::class, 'index']);
     Route::get('/{survey}', [SurveyController::class, 'show']);
@@ -15,5 +15,5 @@ Route::group([
     Route::put('/{survey}', [SurveyController::class, 'update']);
     Route::delete('/{survey}', [SurveyController::class, 'destroy']);
 
-    Route::get('/slugs/{survey:slug}', [SurveyController::class, 'findBySlug'])->withoutMiddleware('auth:sanctum');
+    Route::get('/slugs/{survey:slug}', [SurveyController::class, 'findBySlug'])->withoutMiddleware('auth:api');
 });
