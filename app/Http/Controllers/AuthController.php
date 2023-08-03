@@ -6,6 +6,7 @@ use App\Exceptions\BadRequestException;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\OAuthRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Models\OAuthIdentities;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -79,7 +80,19 @@ class AuthController extends Controller
 
         $userFromGoogle = Socialite::driver($validated['type'])->stateless()->user();
 
-        return"userFromGoogle->getName()";
+        // $user = User::
+
+        // Find identity
+        $identify = OAuthIdentities::where('provider_id', $userFromGoogle->id)
+            ->where('provider_name', $validated['type'])
+            ->where('user_id', )
+            ->first();
+
+        // $user = User::where('provider_name', '=', 'google')
+        //     ->where('provider_id', '=', $userFromGoogle->id)
+        //     ->first();
+
+        return $userFromGoogle->name;
 
         // $userFromGoogle = Socialite::driver('google')->stateless()->user();
 
