@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { useAppHook } from "../../contexts/AppContext";
+import { axiosClient } from "../../api/axios";
 
 const Redirect = () => {
    const [loading, setLoading] = useState<boolean>(false);
@@ -23,7 +24,7 @@ const Redirect = () => {
          setLoading(true);
          const login = async () => {
             try {
-               const res = await axios.post(
+               const res = await axiosClient.post(
                   "http://localhost:8000/api/auth/oauth",
                   data,
                   {
