@@ -13,6 +13,7 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Error from "./pages/Error";
 import PublicSurvey from "./pages/surveys/PublicSurvey";
+import Redirect from "./pages/auth/Redirect";
 
 const router = createBrowserRouter([
    {
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
          {
             path: "/register",
             element: <Register />,
+         },
+         {
+            path: "/redirect/:provider",
+            element: <Redirect />,
          },
       ],
    },

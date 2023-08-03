@@ -39,9 +39,8 @@ const Login = () => {
     async function googleLogin() {
       try {
          const res = await axiosClient.get('/auth/redirect');
-         console.log(res);
-         const ress = await axiosClient.get(res.data);
-         console.log('resss', ress);
+
+         window.location.href = res.data
          
       } catch (error) {
          console.log(error);

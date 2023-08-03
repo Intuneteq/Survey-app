@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\BadRequestException;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\OAuthRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -67,34 +68,42 @@ class AuthController extends Controller
 
     public function oAuthRedirect()
     {
-        return Socialite::driver('google')->stateless()->redirect();
+        $auth_code = Socialite::driver('google')->stateless()->redirect()->getTargetUrl();
+
+        return $auth_code;
     }
 
-    public function oAuthCallback()
+    public function oAuth(OAuthRequest $request)
     {
-        $userFromGoogle = Socialite::driver('google')->stateless()->user();
+        $validated = $request->validated();
+
+        $userFromGoogle = Socialite::driver($validated['type'])->stateless()->user();
+
+        return"userFromGoogle->getName()";
+
+        // $userFromGoogle = Socialite::driver('google')->stateless()->user();
 
         // var_dump(json_encode($user));
-        $foundUser = User::where(['email' => $userFromGoogle->email, 'social_id' => $userFromGoogle->id])->get();
+        // $foundUser = User::where(['email' => $userFromGoogle->email, 'social_id' => $userFromGoogle->id])->get();
 
 
-        $user = null;
-        if (!$foundUser) {
-            $user =  User::create([
-                'name' => $userFromGoogle->name,
-                'email' => $userFromGoogle->email,
-                'google_id' => $userFromGoogle->id,
-            ]);
-        } else {
-            Auth::login($foundUser, true);
-            $user = Auth::user();
-        }
+        // $user = null;
+        // if (!$foundUser) {
+        //     $user =  User::create([
+        //         'name' => $userFromGoogle->name,
+        //         'email' => $userFromGoogle->email,
+        //         'google_id' => $userFromGoogle->id,
+        //     ]);
+        // } else {
+        //     Auth::login($foundUser, true);
+        //     $user = Auth::user();
+        // }
 
-        $token = $user->createToken('main')->accessToken;
+        // $token = $user->createToken('main')->accessToken;
 
-        return new JsonResponse([
-            'user' => $user,
-            'token' => $token
-        ]);
+        // return new JsonResponse([
+        //     'user' => $user,
+        //     'token' => $token
+        // ]);
     }
 }
