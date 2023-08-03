@@ -55,6 +55,9 @@ const router = createBrowserRouter([
             element: <Register />,
          },
          {
+            /**
+             * Provider is expected to be appended in oauth redirect link of the provider
+             */
             path: "/redirect/:provider",
             element: <Redirect />,
          },

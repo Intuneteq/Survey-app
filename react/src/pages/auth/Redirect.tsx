@@ -6,7 +6,7 @@ import { useAppHook } from "../../contexts/AppContext";
 import { axiosClient } from "../../api/axios";
 
 const Redirect = () => {
-   const [loading, setLoading] = useState<boolean>(false);
+   const [loading, setLoading] = useState(false);
 
    const { setToken, setUser } = useAppHook();
 
@@ -18,10 +18,15 @@ const Redirect = () => {
    useEffect(() => {
       let source = axios.CancelToken.source();
 
+      /**
+       * Code: Authorization code from OAuth provider.
+       * Provider: From Provider redirect link. 
+       */
       const data = { code: searchParams.get("code"), provider };
 
       if (data.code) {
          setLoading(true);
+
          const login = async () => {
             try {
                const res = await axiosClient.post(
@@ -39,9 +44,10 @@ const Redirect = () => {
                   console.log("canceled");
                } else {
                   console.log(error);
-                  navigate('/login')
+                  navigate("/login");
                }
             }
+
             setLoading(false);
          };
 
