@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -61,6 +62,39 @@ class AuthController extends Controller
 
         return response([
             'success' => true
+        ]);
+    }
+
+    public function oAuthRedirect()
+    {
+        return Socialite::driver('google')->stateless()->redirect();
+    }
+
+    public function oAuthCallback()
+    {
+        $userFromGoogle = Socialite::driver('google')->stateless()->user();
+
+        // var_dump(json_encode($user));
+        $foundUser = User::where(['email' => $userFromGoogle->email, 'social_id' => $userFromGoogle->id])->get();
+
+
+        $user = null;
+        if (!$foundUser) {
+            $user =  User::create([
+                'name' => $userFromGoogle->name,
+                'email' => $userFromGoogle->email,
+                'google_id' => $userFromGoogle->id,
+            ]);
+        } else {
+            Auth::login($foundUser, true);
+            $user = Auth::user();
+        }
+
+        $token = $user->createToken('main')->accessToken;
+
+        return new JsonResponse([
+            'user' => $user,
+            'token' => $token
         ]);
     }
 }

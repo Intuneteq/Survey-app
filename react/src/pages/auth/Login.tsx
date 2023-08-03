@@ -36,6 +36,18 @@ const Login = () => {
         }
     };
 
+    async function googleLogin() {
+      try {
+         const res = await axiosClient.get('/auth/redirect');
+         console.log(res);
+         const ress = await axiosClient.get(res.data);
+         console.log('resss', ress);
+         
+      } catch (error) {
+         console.log(error);
+      }
+    }
+
     return (
         <>
             <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
@@ -132,6 +144,7 @@ const Login = () => {
                         </button>
                     </div>
                 </form>
+                <button type="button" onClick={googleLogin}>google login</button>
 
                 <p className="mt-10 text-center text-sm text-gray-500">
                     You don't have an account?{" "}
