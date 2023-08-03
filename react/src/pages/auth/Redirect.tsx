@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-// import { useAppHook } from "../../contexts/AppContext";
+import { useAppHook } from "../../contexts/AppContext";
 
 const Redirect = () => {
    const [loading, setLoading] = useState<boolean>(false);
-   // const { setToken, setUser } = useAppHook();
+
+   const { setToken, setUser } = useAppHook();
+
    const { provider } = useParams();
+   const navigate = useNavigate();
 
    const searchParams = new URLSearchParams(document.location.search);
 
    useEffect(() => {
       let source = axios.CancelToken.source();
-
-      console.log('provider', provider);
-      
 
       const data = { code: searchParams.get("code"), type: provider };
 
@@ -30,15 +30,15 @@ const Redirect = () => {
                      cancelToken: source.token,
                   }
                );
-console.log(res);
 
-               // setUser(res.data.user);
-               // setToken(res.data.token);
+               setUser(res.data.user);
+               setToken(res.data.token);
             } catch (error) {
                if (axios.isCancel(error)) {
                   console.log("canceled");
                } else {
                   console.log(error);
+                  navigate('/login')
                }
             }
             setLoading(false);

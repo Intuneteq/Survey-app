@@ -79,9 +79,12 @@ class AuthController extends Controller
     {
         $validated = $request->validated();
 
-        $oauthUser = Socialite::driver($validated['type'])->stateless()->user();
-
-        // $user = User::
+        $oauthUser = null;
+        try {
+            $oauthUser = Socialite::driver($validated['type'])->stateless()->user();
+        } catch (\Throwable $th) {
+            throw new BadRequestException($th->getMessage());
+        }
 
         $foundUser = User::where('email', '=', $oauthUser->email)
             ->first();
@@ -89,7 +92,7 @@ class AuthController extends Controller
         // Find identity
         $identify = OAuthIdentities::where('provider_id', '=', $oauthUser->id)
             ->where('provider_name', '=', $validated['type'])
-            ->where('user_id', '=', $foundUser->id)
+            ->where('user_id', '=', $foundUser?->id ?? '')
             ->first();
 
         $user = null;
@@ -108,38 +111,15 @@ class AuthController extends Controller
                 return $user;
             });
         } else {
-            $user = Auth::login($foundUser, true);
+            Auth::login($foundUser);
+            $user = Auth::user();
         }
 
-        // $user = User::where('provider_name', '=', 'google')
-        //     ->where('provider_id', '=', $oauthUser->id)
-        //     ->first();
+        $token = $user->createToken('main')->accessToken;
 
-        // return $userFromGoogle->name;
-
-        // $userFromGoogle = Socialite::driver('google')->stateless()->user();
-
-        // var_dump(json_encode($user));
-        // $foundUser = User::where(['email' => $userFromGoogle->email, 'social_id' => $userFromGoogle->id])->get();
-
-
-        // $user = null;
-        // if (!$foundUser) {
-        //     $user =  User::create([
-        //         'name' => $userFromGoogle->name,
-        //         'email' => $userFromGoogle->email,
-        //         'google_id' => $userFromGoogle->id,
-        //     ]);
-        // } else {
-        //     Auth::login($foundUser, true);
-        //     $user = Auth::user();
-        // }
-
-        // $token = $user->createToken('main')->accessToken;
-
-        // return new JsonResponse([
-        //     'user' => $user,
-        //     'token' => $token
-        // ]);
+        return new JsonResponse([
+            'user' => $user,
+            'token' => $token
+        ]);
     }
 }
