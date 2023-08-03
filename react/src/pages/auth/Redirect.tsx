@@ -17,7 +17,7 @@ const Redirect = () => {
    useEffect(() => {
       let source = axios.CancelToken.source();
 
-      const data = { code: searchParams.get("code"), type: provider };
+      const data = { code: searchParams.get("code"), provider };
 
       if (data.code) {
          setLoading(true);
