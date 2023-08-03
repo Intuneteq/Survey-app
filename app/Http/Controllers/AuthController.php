@@ -8,6 +8,7 @@ use App\Http\Requests\OAuthRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\OAuthIdentities;
 use App\Models\User;
+use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -78,21 +79,43 @@ class AuthController extends Controller
     {
         $validated = $request->validated();
 
-        $userFromGoogle = Socialite::driver($validated['type'])->stateless()->user();
+        $oauthUser = Socialite::driver($validated['type'])->stateless()->user();
 
         // $user = User::
 
-        // Find identity
-        $identify = OAuthIdentities::where('provider_id', $userFromGoogle->id)
-            ->where('provider_name', $validated['type'])
-            ->where('user_id', )
+        $foundUser = User::where('email', '=', $oauthUser->email)
             ->first();
 
+        // Find identity
+        $identify = OAuthIdentities::where('provider_id', '=', $oauthUser->id)
+            ->where('provider_name', '=', $validated['type'])
+            ->where('user_id', '=', $foundUser->id)
+            ->first();
+
+        $user = null;
+        if (!$identify) {
+            $user = DB::transaction(function () use ($oauthUser, $validated) {
+                $user = User::create([
+                    'name' => $oauthUser->name,
+                    'email' => $oauthUser->email
+                ]);
+
+                OAuthIdentities::create([
+                    'provider_id' => $oauthUser->id,
+                    'provider_name' => $validated['type'],
+                    'user_id' => $user->id
+                ]);
+                return $user;
+            });
+        } else {
+            $user = Auth::login($foundUser, true);
+        }
+
         // $user = User::where('provider_name', '=', 'google')
-        //     ->where('provider_id', '=', $userFromGoogle->id)
+        //     ->where('provider_id', '=', $oauthUser->id)
         //     ->first();
 
-        return $userFromGoogle->name;
+        // return $userFromGoogle->name;
 
         // $userFromGoogle = Socialite::driver('google')->stateless()->user();
 
