@@ -20,6 +20,8 @@ use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
+    private $token_name = 'Personal Access Token';
+
     public function register(RegisterRequest $request)
     {
         $data = $request->validated();
@@ -30,7 +32,7 @@ class AuthController extends Controller
             'password' => bcrypt($data['password'])
         ]);
 
-        $token = $user->createToken('main')->accessToken;
+        $token = $user->createToken($this->token_name)->accessToken;
 
         return response([
             'user' => $user,
@@ -51,7 +53,7 @@ class AuthController extends Controller
         /** @var \App\Models\User $user **/
         $user = Auth::user();
 
-        $token = $user->createToken('main')->accessToken;
+        $token = $user->createToken($this->token_name)->accessToken;
 
         return new JsonResponse([
             'user' => $user,
@@ -65,7 +67,7 @@ class AuthController extends Controller
         $user = Auth::user();
 
         // Revoke the token that was used to authenticate the current request...
-        $user->tokens()->delete();
+        $user->token()->delete();
 
         return response([
             'success' => true
@@ -96,7 +98,7 @@ class AuthController extends Controller
 
         $oauthUser = null;
         try {
-            $oauthUser = Socialite::driver($validated['type'])->stateless()->user();
+            $oauthUser = Socialite::driver($validated['provider'])->stateless()->user();
         } catch (\Throwable $th) {
             throw new BadRequestException($th->getMessage());
         }
@@ -114,7 +116,7 @@ class AuthController extends Controller
 
                 OAuthIdentities::create([
                     'provider_id' => $oauthUser->id,
-                    'provider_name' => $validated['type'],
+                    'provider_name' => $validated['provider'],
                     'user_id' => $user->id
                 ]);
                 return $user;
@@ -124,14 +126,14 @@ class AuthController extends Controller
         if ($foundUser) {
             // Find identity
             $identify = OAuthIdentities::where('provider_id', '=', $oauthUser->id)
-                ->where('provider_name', '=', $validated['type'])
+                ->where('provider_name', '=', $validated['provider'])
                 ->where('user_id', '=', $foundUser->id)
                 ->first();
 
             if (!$identify) {
                 OAuthIdentities::create([
                     'provider_id' => $oauthUser->id,
-                    'provider_name' => $validated['type'],
+                    'provider_name' => $validated['provider'],
                     'user_id' => $foundUser->id
                 ]);
             }
@@ -140,7 +142,7 @@ class AuthController extends Controller
             $user = Auth::user();
         }
 
-        $token = $user->createToken('main')->accessToken;
+        $token = $user->createToken($this->token_name)->accessToken;
 
         return new JsonResponse([
             'user' => $user,

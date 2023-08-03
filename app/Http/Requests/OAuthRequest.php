@@ -26,7 +26,7 @@ class OAuthRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type' => ['required', new Enum(OAuthTypeEnum::class)],
+            'provider' => ['required', new Enum(OAuthTypeEnum::class)],
             'code' => 'required'
         ];
     }
