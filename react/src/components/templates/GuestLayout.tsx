@@ -12,11 +12,11 @@ const GuestLayout = () => {
     }
     
     return (
-        <div>
-            <div className="rounded-sm border-solid border-red-50flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-                <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+        <div className="bg-gray-200 h-full min-h-screen w-full p-10">
+            <div className="w-full">
+                <div className="w-16 h-16 rounded-full bg-white sm:mx-auto p-2">
                     <img
-                        className="mx-auto h-10 w-auto"
+                        className="w-full h-full object-contain"
                         src={myAvatar}
                         alt="my logo"
                     />
