@@ -104,14 +104,8 @@ class AuthController extends Controller
         $foundUser = User::where('email', '=', $oauthUser->email)
             ->first();
 
-        // Find identity
-        $identify = OAuthIdentities::where('provider_id', '=', $oauthUser->id)
-            ->where('provider_name', '=', $validated['type'])
-            ->where('user_id', '=', $foundUser?->id ?? '')
-            ->first();
-
         $user = null;
-        if (!$identify) {
+        if (!$foundUser) {
             $user = DB::transaction(function () use ($oauthUser, $validated) {
                 $user = User::create([
                     'name' => $oauthUser->name,
@@ -125,7 +119,23 @@ class AuthController extends Controller
                 ]);
                 return $user;
             });
-        } else {
+        }
+
+        if ($foundUser) {
+            // Find identity
+            $identify = OAuthIdentities::where('provider_id', '=', $oauthUser->id)
+                ->where('provider_name', '=', $validated['type'])
+                ->where('user_id', '=', $foundUser->id)
+                ->first();
+
+            if (!$identify) {
+                OAuthIdentities::create([
+                    'provider_id' => $oauthUser->id,
+                    'provider_name' => $validated['type'],
+                    'user_id' => $foundUser->id
+                ]);
+            }
+
             Auth::login($foundUser);
             $user = Auth::user();
         }
