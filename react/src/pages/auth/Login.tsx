@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, MouseEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import { AxiosError } from "axios";
 
@@ -37,11 +37,16 @@ const Login = () => {
       }
    };
 
-   async function oauthLogin(provider: string) {
-      console.log(provider);
+   async function oauthLogin(
+      e: MouseEvent<HTMLButtonElement>,
+      provider: string
+   ) {
+      e.preventDefault();
 
       try {
-         const res = await axiosClient.get("/auth/redirect");
+         const res = await axiosClient.get(
+            `/auth/redirect?provider=${provider}`
+         );
 
          window.location.href = res.data;
       } catch (error) {
@@ -150,7 +155,7 @@ const Login = () => {
                <button
                   className="w-3/6 h-10 text-slate-900 font-semibold rounded-md bg-gray-100 hover:bg-slate-300 flex items-center justify-center gap-2"
                   type="button"
-                  onClick={() => oauthLogin("google")}
+                  onClick={(e) => oauthLogin(e, "google")}
                >
                   <img
                      className="w-4 h-4"
@@ -162,7 +167,7 @@ const Login = () => {
                <button
                   className="w-3/6 h-10 text-white font-semibold rounded-md bg-slate-950 hover:bg-slate-600 flex items-center justify-center gap-2"
                   type="button"
-                  onClick={() => oauthLogin("github")}
+                  onClick={(e) => oauthLogin(e, "github")}
                >
                   <img
                      className="w-6 h-6 rounded-md"

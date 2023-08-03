@@ -1,12 +1,13 @@
+import { FormEvent, useState, MouseEvent } from "react";
 import { Link } from "react-router-dom";
-import { FormEvent, useState } from "react";
+import { AxiosError } from "axios";
 
 import { ApiError, axiosClient } from "../../api/axios";
-import { AxiosError } from "axios";
 import { useAppHook } from "../../contexts/AppContext";
 
 import { ErrorObj } from "../../types/auth";
 import showError from "../../utils/errors";
+
 import FormLayout from "../../components/templates/FormLayout";
 
 const Register = () => {
@@ -45,11 +46,16 @@ const Register = () => {
       }
    };
 
-   async function oAuthRegister(provider: string) {
-      console.log(provider);
+   async function oAuthRegister(
+      e: MouseEvent<HTMLButtonElement>,
+      provider: string
+   ) {
+      e.preventDefault();
 
       try {
-         const res = await axiosClient.get("/auth/redirect");
+         const res = await axiosClient.get(
+            `/auth/redirect?provider=${provider}`
+         );
 
          window.location.href = res.data;
       } catch (error) {
@@ -176,7 +182,7 @@ const Register = () => {
                <button
                   className="w-3/6 h-10 text-slate-900 font-semibold rounded-md bg-gray-100 hover:bg-slate-300 flex items-center justify-center gap-2"
                   type="button"
-                  onClick={() => oAuthRegister("google")}
+                  onClick={(e) => oAuthRegister(e, "google")}
                >
                   <img
                      className="w-4 h-4"
@@ -188,7 +194,7 @@ const Register = () => {
                <button
                   className="w-3/6 h-10 text-white font-semibold rounded-md bg-slate-950 hover:bg-slate-600 flex items-center justify-center gap-2"
                   type="button"
-                  onClick={() => oAuthRegister("github")}
+                  onClick={(e) => oAuthRegister(e, "github")}
                >
                   <img
                      className="w-6 h-6 rounded-md"

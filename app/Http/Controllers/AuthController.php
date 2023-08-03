@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OAuthTypeEnum;
 use App\Exceptions\BadRequestException;
+use App\Exceptions\UnprocessableException;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\OAuthRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\OAuthIdentities;
 use App\Models\User;
 use DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules\Enum;
 use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
@@ -68,9 +72,20 @@ class AuthController extends Controller
         ]);
     }
 
-    public function oAuthRedirect()
+    public function oAuthRedirect(Request $request)
     {
-        $auth_code = Socialite::driver('google')->stateless()->redirect()->getTargetUrl();
+        $provider = $request->query('provider');
+
+        $validator = Validator::make(['provider' => $provider], [
+            'provider' => ['required', new Enum(OAuthTypeEnum::class)]
+
+        ]);
+
+        if ($validator->fails()) {
+            throw new UnprocessableException($validator->errors()->first());
+        }
+
+        $auth_code = Socialite::driver($provider)->stateless()->redirect()->getTargetUrl();
 
         return $auth_code;
     }
