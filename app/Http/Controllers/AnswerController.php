@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SurveyAnswer;
 use App\Exceptions\BadRequestException;
 use App\Models\Answer;
 use App\Http\Requests\StoreAnswerRequest;
@@ -29,6 +30,9 @@ class AnswerController extends Controller
         $validated = $request->validated();
 
        $answer = $this->answerRepository->create($survey, $validated);
+
+       // Notify survey owner about new answer
+       SurveyAnswer::dispatch($answer);
 
         return response("", 201);
     }
