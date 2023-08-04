@@ -11,6 +11,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Models\OAuthIdentities;
 use App\Models\User;
 use DB;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -31,6 +32,11 @@ class AuthController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password'])
         ]);
+
+        /**
+         * Trigger event to email the user verification link
+         */
+        // event(new Registered($user));
 
         $token = $user->createToken($this->token_name)->accessToken;
 

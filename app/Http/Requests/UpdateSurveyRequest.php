@@ -14,11 +14,13 @@ class UpdateSurveyRequest extends FormRequest
     public function authorize(): bool
     {
         $survey = $this->route('survey'); // Access to Injected survey
+        /**
+         * Implementing survey policy on update.
+         * use AuthServiceProvider
+         * use /App/Policy/SurveyPolicy
+         */
 
-        if ($this->user()->id !== $survey->user_id) {
-            return false;
-        }
-        return true;
+         return $this->user()->can('update', $survey);
     }
 
     /**
@@ -42,5 +44,12 @@ class UpdateSurveyRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         throw new UnprocessableException($validator->errors()->first());
+    }
+
+    public function messages()
+    {
+        return [
+            'authorize' => 'You do not own this survey.'
+        ];
     }
 }

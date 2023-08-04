@@ -39,10 +39,10 @@ class SurveyController extends Controller
 
     public function show(Survey $survey, Request $request)
     {
-        $user = $request->user();
+        $authorized = $request->user()->can('view', $survey);
 
         // Validate user created survey
-        if ($user->id !== $survey->user_id) {
+        if (!$authorized) {
             throw new UnAuthorizedException('Unauthorized action');
         }
 
@@ -74,8 +74,9 @@ class SurveyController extends Controller
 
     public function destroy(Survey $survey, Request $request)
     {
-        $user = $request->user();
-        if ($user->id !== $survey->user_id) {
+        $canDelete = $request->user()->can('delete', $survey);
+
+        if (!$canDelete) {
             throw new UnAuthorizedException('Unauthorized action.');
         }
 
