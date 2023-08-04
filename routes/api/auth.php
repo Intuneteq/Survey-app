@@ -11,8 +11,8 @@ Route::group([
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
 
-    Route::get('/redirect', [AuthController::class, 'oAuthRedirect'])->withoutMiddleware('auth:api');
-    Route::post('/oauth', [AuthController::class, 'oAuth'])->withoutMiddleware('auth:api');
+    Route::get('/redirect', [AuthController::class, 'oAuthRedirect']);
+    Route::post('/oauth', [AuthController::class, 'oAuth']);
 
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
 });
