@@ -39,8 +39,7 @@ class SendSurveyAnswerEmailNotification
     public function handle(SurveyAnswer $event): void
     {
         $answer = $event->answer;
-        $survey = $answer->survey;
-        $user = $survey->user;
-        Mail::to($user)->send(new MailSurveyAnswer($answer));
+        
+        Mail::to($answer->survey->user)->send(new MailSurveyAnswer($answer));
     }
 }

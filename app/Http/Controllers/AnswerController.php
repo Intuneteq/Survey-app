@@ -32,12 +32,10 @@ class AnswerController extends Controller
     {
         $validated = $request->validated();
 
-       $answer = $this->answerRepository->create($survey, $validated);
+        $answer = $this->answerRepository->create($survey, $validated);
 
-       Mail::to($survey->user)->send(new MailSurveyAnswer($answer));
-
-    //    Notify survey owner about new answer
-    //    SurveyAnswer::dispatch($answer);
+        // Notify survey owner about new answer
+        SurveyAnswer::dispatch($answer);
 
         return response("", 201);
     }
