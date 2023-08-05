@@ -14,5 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    // return view('welcome');
+
+    $answer = App\Models\Answer::find("99cf11a1-cdd5-4bc8-b076-9f04ef63a1c7");
+
+    return new App\Mail\MailSurveyAnswer($answer);
 });

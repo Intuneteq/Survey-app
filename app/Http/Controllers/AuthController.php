@@ -8,16 +8,17 @@ use App\Exceptions\UnprocessableException;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\OAuthRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Mail\OrderShipped;
 use App\Models\OAuthIdentities;
 use App\Models\User;
 use DB;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
 use Laravel\Socialite\Facades\Socialite;
+use Mail;
 
 class AuthController extends Controller
 {
@@ -58,6 +59,8 @@ class AuthController extends Controller
 
         /** @var \App\Models\User $user **/
         $user = Auth::user();
+
+        Mail::to($user)->send(new OrderShipped());
 
         $token = $user->createToken($this->token_name)->accessToken;
 

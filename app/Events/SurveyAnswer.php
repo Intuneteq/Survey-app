@@ -20,8 +20,7 @@ class SurveyAnswer
      * Create a new event instance.
      */
     public function __construct(
-        public Answer $answer,
-        public Survey $survey
+        public Answer $answer
     ) {
     }
 
