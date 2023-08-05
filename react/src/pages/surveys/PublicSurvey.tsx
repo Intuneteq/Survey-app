@@ -36,7 +36,6 @@ const PublicSurvey = () => {
 
    const onSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
       ev.preventDefault();
-      console.log("submitted", answers);
 
       try {
          await axiosClient.post(`/answers/surveys/${survey.id}`, {answers});

@@ -8,7 +8,6 @@ use App\Exceptions\UnprocessableException;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\OAuthRequest;
 use App\Http\Requests\RegisterRequest;
-use App\Mail\OrderShipped;
 use App\Models\OAuthIdentities;
 use App\Models\User;
 use DB;
@@ -59,8 +58,6 @@ class AuthController extends Controller
 
         /** @var \App\Models\User $user **/
         $user = Auth::user();
-
-        Mail::to($user)->send(new OrderShipped());
 
         $token = $user->createToken($this->token_name)->accessToken;
 

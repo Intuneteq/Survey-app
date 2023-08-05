@@ -7,10 +7,13 @@ use App\Exceptions\BadRequestException;
 use App\Models\Answer;
 use App\Http\Requests\StoreAnswerRequest;
 use App\Http\Requests\UpdateAnswerRequest;
+use App\Mail\MailSurveyAnswer;
 use App\Models\Question;
 use App\Models\Survey;
 use App\Models\SurveyQuestionAnswer;
 use App\Repositories\AnswerRepository;
+use Illuminate\Http\JsonResponse;
+use Mail;
 
 class AnswerController extends Controller
 {
@@ -31,8 +34,10 @@ class AnswerController extends Controller
 
        $answer = $this->answerRepository->create($survey, $validated);
 
-       // Notify survey owner about new answer
-       SurveyAnswer::dispatch($answer);
+       Mail::to($survey->user)->send(new MailSurveyAnswer($answer));
+
+    //    Notify survey owner about new answer
+    //    SurveyAnswer::dispatch($answer);
 
         return response("", 201);
     }
