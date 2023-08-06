@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\OAuthTypeEnum;
+use App\Events\Registered;
 use App\Exceptions\BadRequestException;
 use App\Exceptions\UnprocessableException;
 use App\Http\Requests\LoginRequest;
@@ -34,9 +35,9 @@ class AuthController extends Controller
         ]);
 
         /**
-         * Trigger event to email the user verification link
+         * Trigger event for newly registered user
          */
-        // event(new Registered($user));
+        Registered::dispatch($user);
 
         $token = $user->createToken($this->token_name)->accessToken;
 
@@ -127,6 +128,11 @@ class AuthController extends Controller
                 ]);
                 return $user;
             });
+
+            /**
+             * Trigger event for newly registered user
+             */
+            Registered::dispatch($user);
         }
 
         if ($foundUser) {
