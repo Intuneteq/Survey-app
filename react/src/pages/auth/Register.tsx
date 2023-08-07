@@ -1,5 +1,5 @@
 import { FormEvent, useState, MouseEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 
 import { ApiError, axiosClient } from "../../api/axios";
@@ -18,6 +18,7 @@ const Register = () => {
    const [error, setError] = useState<ErrorObj>({ __html: "" });
 
    const { setToken, setUser } = useAppHook();
+   const navigate = useNavigate();
 
    const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
@@ -35,6 +36,8 @@ const Register = () => {
 
          setUser(res.user);
          setToken(res.token);
+         navigate('/dashboard')
+
       } catch (error: any) {
          const axiosError: AxiosError<ApiError> = error;
 

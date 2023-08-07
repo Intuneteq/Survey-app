@@ -21,6 +21,6 @@ class SendRegistrationNotification
      */
     public function handle(Registered $event): void
     {
-        var_dump('here');
+        // var_dump('here');
     }
 }

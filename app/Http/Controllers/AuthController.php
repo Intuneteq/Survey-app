@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\OAuthTypeEnum;
 use App\Events\Registered;
 use App\Exceptions\BadRequestException;
+use App\Exceptions\ForbiddenException;
 use App\Exceptions\UnprocessableException;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\OAuthRequest;
@@ -16,9 +17,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Enum;
 use Laravel\Socialite\Facades\Socialite;
-use Mail;
 
 class AuthController extends Controller
 {
@@ -31,7 +32,8 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => bcrypt($data['password'])
+            'password' => bcrypt($data['password']),
+            'email_verification_token' => Str::random(40)
         ]);
 
         /**
@@ -118,7 +120,7 @@ class AuthController extends Controller
             $user = DB::transaction(function () use ($oauthUser, $validated) {
                 $user = User::create([
                     'name' => $oauthUser->name,
-                    'email' => $oauthUser->email
+                    'email' => $oauthUser->email,
                 ]);
 
                 OAuthIdentities::create([
@@ -160,5 +162,20 @@ class AuthController extends Controller
             'user' => $user,
             'token' => $token
         ]);
+    }
+
+    public function email_verification(Request $request, string $token)
+    {
+        $user = Auth::user();
+
+        if ($user->email_verification_token !== $token) {
+            throw new ForbiddenException('Invalid token');
+        }
+
+        $user->email_verified_at = now();
+        $user->email_verification_token = null;
+        $user->save();
+
+        return response('', 204);
     }
 }

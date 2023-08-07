@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'social_id',
         'provider_name',
+        'email_verification_token'
     ];
 
     /**
@@ -34,7 +35,8 @@ class User extends Authenticatable
         'password',
         'remember_token',
         'social_id',
-        'provider_name'
+        'provider_name',
+        'email_verification_token'
     ];
 
     /**
