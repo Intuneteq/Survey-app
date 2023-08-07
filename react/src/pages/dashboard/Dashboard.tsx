@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { EyeIcon, PencilIcon } from "@heroicons/react/24/outline";
 
 import TButton from "../../components/atoms/TButton";
@@ -13,12 +14,27 @@ const Dashboard = () => {
    const [loading, setLoading] = useState(false);
    const [data, setData] = useState<Partial<DashboardDataType>>({});
 
+   // const searchParams = new URLSearchParams(document.location.search);
+
    useEffect(() => {
       setLoading(true);
+      // const token = searchParams.get("token");
+      let source = axios.CancelToken.source();
 
       const getData = async () => {
          try {
-            const res = await axiosClient.get("/users/dashboard");
+            // if (token) {
+            //    const tokenData = await axiosClient.get(
+            //       `/auth/email/verify/${token}`,
+            //       { cancelToken: source.token }
+            //    );
+            //    console.log(tokenData.data);
+            // }
+
+            const res = await axiosClient.get("/users/dashboard", {
+               cancelToken: source.token,
+            });
+
             setData(res.data);
          } catch (error) {
             console.log(error);
@@ -27,6 +43,13 @@ const Dashboard = () => {
       };
 
       getData();
+
+      // Cancel token here
+      return () => {
+         console.log("unmounting");
+
+         source.cancel();
+      };
    }, []);
 
    const loadingContent = (
@@ -45,7 +68,7 @@ const Dashboard = () => {
                <DashboardCard
                   title="Total Surveys"
                   className="order-1 lg:order-2"
-                  style={{ animationDelay: '0.1s' }}
+                  style={{ animationDelay: "0.1s" }}
                >
                   <div className="text-8xl pb-4 font-semibold flex-1 flex items-center justify-center">
                      {data.totalSurveys}
@@ -54,7 +77,7 @@ const Dashboard = () => {
                <DashboardCard
                   title="Total Answers"
                   className="order-2 lg:order-4"
-                  style={{ animationDelay: '0.2s' }}
+                  style={{ animationDelay: "0.2s" }}
                >
                   <div className="text-8xl pb-4 font-semibold flex-1 flex items-center justify-center">
                      {data.totalAnswers}
@@ -63,7 +86,7 @@ const Dashboard = () => {
                <DashboardCard
                   title="Latest Survey"
                   className="order-3 lg:order-1 row-span-2"
-                  style={{ animationDelay: '0.2s' }}
+                  style={{ animationDelay: "0.2s" }}
                >
                   <>
                      {data.latestSurveys && (
@@ -125,7 +148,7 @@ const Dashboard = () => {
                <DashboardCard
                   title="Latest Answers"
                   className="order-4 lg:order-3 row-span-2"
-                  style={{ animationDelay: '0.3s' }}
+                  style={{ animationDelay: "0.3s" }}
                >
                   <>
                      {data.latestAnswers?.length && (

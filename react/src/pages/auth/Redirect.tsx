@@ -19,8 +19,32 @@ const Redirect = () => {
       let source = axios.CancelToken.source();
 
       /**
+       * Code: Email verification token.
+       * Provider: From Provider redirect link. It is hardcoded to token on the server side.
+       */
+
+      const token = searchParams.get("token");
+
+      if (token) {
+         async function verify_email() {
+            try {
+               const tokenData = await axiosClient.get(
+                  `/auth/email/verify/${token}`,
+                  { cancelToken: source.token }
+               );
+               setUser(tokenData.data.user);
+               navigate('/login')
+            } catch (error) {
+               console.log(error);
+            }
+         }
+
+         verify_email();
+      }
+
+      /**
        * Code: Authorization code from OAuth provider.
-       * Provider: From Provider redirect link. 
+       * Provider: From Provider redirect link.
        */
       const data = { code: searchParams.get("code"), provider };
 

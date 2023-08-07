@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    // return view('welcome');
+    return view('welcome');
 
-    $user = App\Models\User::find(3);
+    // $user = App\Models\User::find(3);
 
-    return new App\Mail\EmailVerification($user);
+    // return new App\Mail\EmailVerification($user);
 });

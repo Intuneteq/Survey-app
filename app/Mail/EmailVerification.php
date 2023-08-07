@@ -42,7 +42,7 @@ class EmailVerification extends Mailable
         return new Content(
             markdown: 'emails.email-verification',
             with: [
-                'url' => 'http://localhost:3000/redirect/token/?token=' . $this->user->email_verification_token,
+                'url' => 'http://localhost:3000/dashboard/token/?token=' . $this->user->email_verification_token,
                 'name' => $this->user->name
             ],
         );

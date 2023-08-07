@@ -29,6 +29,10 @@ const router = createBrowserRouter([
             element: <Dashboard />,
          },
          {
+            path: "/dashboard/:provider",
+            element: <Redirect />,
+         },
+         {
             path: "/surveys",
             element: <Surveys />,
          },

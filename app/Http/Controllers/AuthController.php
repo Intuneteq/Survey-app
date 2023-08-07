@@ -176,6 +176,8 @@ class AuthController extends Controller
         $user->email_verification_token = null;
         $user->save();
 
-        return response('', 204);
+        return new JsonResponse([
+            'user' => $user,
+        ]);
     }
 }
