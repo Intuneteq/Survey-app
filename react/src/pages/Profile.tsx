@@ -39,7 +39,7 @@ export default function Profile() {
    return loading ? (
       isLoading
    ) : (
-      <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 ">
+      <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
          <div className="shadow sm:overflow-hidden sm:rounded-md space-y-6 bg-white px-4 py-5 sm:p-6">
             <div className="px-4 sm:px-0">
                <h3 className="leading-7 text-gray-900 text-2xl font-bold">

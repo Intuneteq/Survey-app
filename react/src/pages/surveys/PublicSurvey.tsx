@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import getSurvey from "../../utils/surveys";
 
 import PublicQuestions from "../../components/molecules/PublicQuestions";
+import TButton from "../../components/atoms/TButton";
 
 import { QuestionType, SurveyType } from "../../types/survey";
 import { axiosClient } from "../../api/axios";
@@ -28,7 +29,6 @@ const PublicSurvey = () => {
 
       call();
    }, []);
-   
 
    function answerChanged(question: QuestionType, value: string | string[]) {
       answers[question.id as number] = value;
@@ -36,63 +36,65 @@ const PublicSurvey = () => {
 
    const onSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
       ev.preventDefault();
+      setLoading(true);
 
       try {
-         await axiosClient.post(`/answers/surveys/${survey.id}`, {answers});
+         await axiosClient.post(`/answers/surveys/${survey.id}`, { answers });
          setSurveyFinished(true);
       } catch (error: any) {
          console.log(error);
       }
+
+      setLoading(false);
    };
 
-   if (loading) {
-      return <div className="flex justify-center">....loading</div>;
-   } else {
-      return surveyFinished ? (
+   return surveyFinished ? (
+      <div className="w-screen h-screen flex justify-center items-center">
          <div className="py-8 px-6 bg-emerald-500 text-white w-[600px] mx-auto">
-            Thank you for participating in the survey
+            <p className="text-center">
+               Thank you for participating in the survey
+            </p>
          </div>
-      ) : (
-         
-         <form
-            onSubmit={(ev) => onSubmit(ev)}
-            className="container mx-auto p-4"
-         >
-            <div className="grid grid-cols-6">
-               <div className="mr-4">
-                  <img src={survey.image_url ?? ""} alt="" />
-               </div>
-
-               <div className="col-span-5">
-                  <h1 className="text-3xl mb-3">{survey.title}</h1>
-                  <p className="text-gray-500 text-sm mb-3">
-                     Expire Date: {survey.expire_date as string}
-                  </p>
-                  <p className="text-gray-500 text-sm mb-3">
-                     {survey.description}
-                  </p>
-               </div>
-            </div>
-
-            <div>
-               {survey.questions?.map((question, index) => (
-                  <PublicQuestions
-                     key={question.id}
-                     question={question}
-                     index={index}
-                     answerChanged={(val) => answerChanged(question, val)}
-                  />
-               ))}
-            </div>
-            <button
-               type="submit"
-               className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      </div>
+   ) : (
+      <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+         <div className="shadow sm:overflow-hidden sm:rounded-md space-y-6 min-h-screen bg-white px-4 py-5 sm:p-6">
+            <form
+               onSubmit={(ev) => onSubmit(ev)}
+               className="container mx-auto p-4"
             >
-               Submit
-            </button>
-         </form>
-      );
-   }
+               <div className="grid grid-cols-6">
+                  <div className="mr-4">
+                     <img src={survey.image_url ?? ""} alt="" />
+                  </div>
+
+                  <div className="col-span-5">
+                     <h1 className="text-3xl mb-3">{survey.title}</h1>
+                     <p className="text-gray-500 text-sm mb-3">
+                        Expire Date: {survey.expire_date as string}
+                     </p>
+                     <p className="text-gray-500 text-sm mb-3">
+                        {survey.description}
+                     </p>
+                  </div>
+               </div>
+
+               <div>
+                  {survey.questions?.map((question, index) => (
+                     <PublicQuestions
+                        key={question.id}
+                        question={question}
+                        index={index}
+                        answerChanged={(val) => answerChanged(question, val)}
+                     />
+                  ))}
+               </div>
+               <TButton loading={loading}>Submit</TButton>
+            </form>
+         </div>
+      </div>
+   );
+   // }
 };
 
 export default PublicSurvey;
