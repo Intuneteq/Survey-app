@@ -12,4 +12,6 @@ Route::group([
     Route::get('/me', [UserController::class, 'me']);
 
     Route::get('/dashboard', [UserController::class, 'dashboard']);
+
+    Route::patch('/', [UserController::class, 'update']);
 });

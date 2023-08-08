@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\AnswerResource;
 use App\Http\Resources\SurveyResourceDashboard;
+use App\Mail\EmailVerification;
 use App\Models\Survey;
 use App\Models\Answer;
+use Auth;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Mail;
 
 class UserController extends Controller
 {
@@ -46,5 +51,21 @@ class UserController extends Controller
             'totalAnswers' => $totalAnswers,
             'latestAnswers' => AnswerResource::collection($latestAnswers)
         ];
+    }
+
+    public function update(UpdateUserRequest $request)
+    {
+        $validated = $request->validated();
+
+        $user = Auth::user();
+
+        $user->name = $validated['name'] ?? $user->name;
+        $user->email = $validated['email'] ?? $user->email;
+        $user->email_verified_at = $validated['email'] ? null : $user->email_verified_at;
+        $user->save();
+
+        Mail::to($user)->send(new EmailVerification($user));
+
+        return new JsonResponse($user);
     }
 }

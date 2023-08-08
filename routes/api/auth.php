@@ -15,6 +15,7 @@ Route::group([
     Route::post('/oauth', [AuthController::class, 'oAuth']);
 
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
+    Route::post('/change-password', [AuthController::class, 'changePassword'])->middleware('auth:api');
 
     Route::get('/email/verify/{token}', [AuthController::class, 'emailVerification'])->middleware('auth:api');
     Route::post('/email/re-send', [AuthController::class, 'sendVerificationEmail'])->middleware('auth:api');

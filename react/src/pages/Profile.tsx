@@ -6,9 +6,10 @@ import { capitalizeFLetter } from "../utils/reuables";
 
 import FormSkeleton from "../components/skeletons/FormSkeleton";
 import TButton, { Colors } from "../components/atoms/TButton";
+import { axiosClient } from "../api/axios";
 
 export default function Profile() {
-   const { user } = useAppHook();
+   const { user, setUser } = useAppHook();
 
    const [loading, setLoading] = useState(false);
    const [email, setEmail] = useState(user.email);
@@ -17,8 +18,25 @@ export default function Profile() {
    const [confirmPassword, setConfirmPassword] = useState("");
    const [showInput, setshowInput] = useState({ index: 0, state: false });
 
-   const submitProfile = (index: number) => {
-      console.log(index);
+   const submitProfile = async (index: number) => {
+      const data: Partial<{ name: string; email: string }> = {};
+
+      if (index === 0) {
+         data.name = name;
+      }
+
+      if (index === 1) {
+         data.email = email;
+      }
+
+      try {
+         const res = await axiosClient.patch("/users", data);
+
+         setUser(res.data);
+      } catch (error) {
+         console.log(error);
+      }
+
       setshowInput({ index, state: false });
    };
 
@@ -251,7 +269,7 @@ export default function Profile() {
                   </div>
                </div>
                <div className="mt-2">
-                  <TButton loading={loading} >Save</TButton>
+                  <TButton loading={loading}>Save</TButton>
                </div>
             </form>
          </div>

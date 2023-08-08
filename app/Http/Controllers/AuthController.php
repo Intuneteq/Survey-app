@@ -7,6 +7,7 @@ use App\Events\Registered;
 use App\Exceptions\BadRequestException;
 use App\Exceptions\ForbiddenException;
 use App\Exceptions\UnprocessableException;
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\OAuthRequest;
 use App\Http\Requests\RegisterRequest;
@@ -190,5 +191,16 @@ class AuthController extends Controller
         Mail::to($user)->send(new EmailVerification($user));
 
         return response('', 200);
+    }
+
+    public function changePassword(ChangePasswordRequest $request)
+    {
+        $validated = $request->validated();
+
+        $user = Auth::user();
+
+        $user->password = bcrypt($validated['password']);
+
+        return new JsonResponse($user);
     }
 }
