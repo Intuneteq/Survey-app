@@ -11,6 +11,7 @@ use App\Models\Answer;
 use Auth;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Mail;
 
 class UserController extends Controller
@@ -62,9 +63,12 @@ class UserController extends Controller
         $user->name = $validated['name'] ?? $user->name;
         $user->email = $validated['email'] ?? $user->email;
         $user->email_verified_at = $validated['email'] ? null : $user->email_verified_at;
+        $user->email_verification_token = $validated['email'] ? Str::random(40) : null;
         $user->save();
 
-        Mail::to($user)->send(new EmailVerification($user));
+        if ($validated['email']) {
+            Mail::to($user)->send(new EmailVerification($user));
+        }
 
         return new JsonResponse($user);
     }

@@ -17,9 +17,11 @@ export default function Profile() {
    const [password, setPassword] = useState("");
    const [confirmPassword, setConfirmPassword] = useState("");
    const [showInput, setshowInput] = useState({ index: 0, state: false });
+   const [isSaving, setIsSaving] = useState(false);
 
    const submitProfile = async (index: number) => {
       const data: Partial<{ name: string; email: string }> = {};
+      setIsSaving(true);
 
       if (index === 0) {
          data.name = name;
@@ -37,11 +39,27 @@ export default function Profile() {
          console.log(error);
       }
 
+      setIsSaving(false);
       setshowInput({ index, state: false });
    };
 
-   const handleChangePassword = (e: React.FormEvent<HTMLFormElement>) => {
+   const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+      setIsSaving(true);
+
+      const data = { password, password_confirmation: confirmPassword };
+
+      try {
+         const res = await axiosClient.post("/auth/change-password", data);
+
+         setUser(res.data);
+         setPassword("");
+         setConfirmPassword("");
+      } catch (error) {
+         console.log(error);
+      }
+
+      setIsSaving(false);
    };
 
    useEffect(() => {
@@ -87,6 +105,7 @@ export default function Profile() {
                            </div>
                            <div className="leading-6 mt-1 flex gap-2">
                               <TButton
+                                 loading={isSaving}
                                  color={Colors.GREEN}
                                  onClick={() => submitProfile(0)}
                               >
@@ -138,6 +157,7 @@ export default function Profile() {
                            </div>
                            <div className="leading-6 mt-1 flex gap-2">
                               <TButton
+                                 loading={isSaving}
                                  color={Colors.GREEN}
                                  onClick={() => submitProfile(1)}
                               >
@@ -269,7 +289,7 @@ export default function Profile() {
                   </div>
                </div>
                <div className="mt-2">
-                  <TButton loading={loading}>Save</TButton>
+                  <TButton loading={isSaving}>Save</TButton>
                </div>
             </form>
          </div>
