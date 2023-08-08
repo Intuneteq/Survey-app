@@ -16,5 +16,6 @@ Route::group([
 
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
 
-    Route::get('/email/verify/{token}', [AuthController::class, 'email_verification'])->middleware('auth:api');
+    Route::get('/email/verify/{token}', [AuthController::class, 'emailVerification'])->middleware('auth:api');
+    Route::post('/email/re-send', [AuthController::class, 'sendVerificationEmail'])->middleware('auth:api');
 });

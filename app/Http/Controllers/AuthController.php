@@ -10,6 +10,7 @@ use App\Exceptions\UnprocessableException;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\OAuthRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Mail\EmailVerification;
 use App\Models\OAuthIdentities;
 use App\Models\User;
 use DB;
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Enum;
 use Laravel\Socialite\Facades\Socialite;
+use Mail;
 
 class AuthController extends Controller
 {
@@ -164,7 +166,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function email_verification(Request $request, string $token)
+    public function emailVerification(Request $request, string $token)
     {
         $user = Auth::user();
 
@@ -179,5 +181,14 @@ class AuthController extends Controller
         return new JsonResponse([
             'user' => $user,
         ]);
+    }
+
+    public function sendVerificationEmail(Request $request)
+    {
+        $user = $request->user();
+
+        Mail::to($user)->send(new EmailVerification($user));
+
+        return response('', 200);
     }
 }

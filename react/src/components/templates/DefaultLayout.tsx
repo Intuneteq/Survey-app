@@ -1,7 +1,13 @@
-import { Fragment, useEffect } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon, UserIcon } from "@heroicons/react/24/outline";
+import {
+   Bars3Icon,
+   XMarkIcon,
+   UserIcon,
+   ExclamationCircleIcon,
+} from "@heroicons/react/24/outline";
 import { NavLink, Navigate, Outlet } from "react-router-dom";
+import axios from "axios";
 
 import { useAppHook } from "../../contexts/AppContext";
 import { axiosClient } from "../../api/axios";
@@ -21,16 +27,28 @@ function classNames(...classes: Array<string>) {
 }
 
 export default function DefaultLayout() {
-   const { user, setUser, token, logout: logOut } = useAppHook();
+   const [fetching, setFetching] = useState(false);
+   const {
+      user,
+      setUser,
+      token,
+      logout: logOut,
+      showNotification,
+   } = useAppHook();
 
    if (!token) {
       return <Navigate to={"/login"} />;
    }
 
    useEffect(() => {
+      let source = axios.CancelToken.source();
+      setFetching(true);
+
       const getUser = async () => {
          try {
-            const res = await axiosClient.get("/users/me");
+            const res = await axiosClient.get("/users/me", {
+               cancelToken: source.token,
+            });
             setUser(res.data);
          } catch (error) {
             console.log(error);
@@ -38,6 +56,14 @@ export default function DefaultLayout() {
       };
 
       getUser();
+
+      setTimeout(() => {
+         setFetching(false);
+      }, 1000);
+
+      return () => {
+         source.cancel();
+      };
    }, []);
 
    async function logout(e: React.MouseEvent<HTMLElement>): Promise<void> {
@@ -51,8 +77,53 @@ export default function DefaultLayout() {
       }
    }
 
+   async function resendVerificationEmail() {
+      try {
+         const send = async () => {
+            const res = await axiosClient.post("/auth/email/re-send", null);
+            console.log(res.data);
+
+            showNotification("verification sent");
+         };
+
+         send();
+      } catch (error) {
+         console.log("error");
+      }
+   }
+
+   function capitalizeFLetter(word: string): string {
+      return word[0]?.toUpperCase() + word?.slice(1);
+   }
+
+   const verificationModal = (
+      <div className="absolute top-0 w-screen px-6 h-28 sm:h-16 z-10 bg-sky-100 flex justify-start items-center sm:gap-2 lg:gap-4 lg:px-10 animate-fade-in-down">
+         <ExclamationCircleIcon
+            className="h-12 w-12 sm:h-8 sm:w-8 lg:h-6 lg:w-6 mr-2"
+            color="black"
+         />
+         <div className="flex flex-col gap-1 sm:flex-row sm:justify-center sm:items-center sm:gap-4">
+            <p className="text-sm sm:text-md">
+               Please activate your account to start creating surveys. We sent
+               an activation email to{" "}
+               <span className="font-bold">
+                  {capitalizeFLetter(user.email)}
+               </span>
+            </p>
+            <button
+               type="button"
+               onClick={resendVerificationEmail}
+               className="w-48 h-8 border border-solid border-gray-600 rounded-sm text-sm hover:bg-slate-300"
+            >
+               Resend activation
+            </button>
+         </div>
+      </div>
+   );
+
    return (
       <>
+         {!user.email_verified_at && !fetching && verificationModal}
          <div className="min-h-full">
             <Disclosure as="nav" className="bg-gray-800">
                {({ open }) => (
@@ -91,8 +162,12 @@ export default function DefaultLayout() {
                            <div className="hidden md:block">
                               <div className="ml-4 flex items-center md:ml-6">
                                  <div className="flex flex-col">
-                                    <p className="text-base font-medium leading-none text-white">{user.name}</p>
-                                    <p className="text-sm font-medium leading-none text-gray-400">{user.email}</p>
+                                    <p className="text-base font-medium leading-none text-white">
+                                       {user.name}
+                                    </p>
+                                    <p className="text-sm font-medium leading-none text-gray-400">
+                                       {user.email}
+                                    </p>
                                  </div>
                                  {/* Profile dropdown */}
                                  <Menu as="div" className="relative ml-3">

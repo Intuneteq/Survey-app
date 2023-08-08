@@ -26,7 +26,7 @@ const user: User = {
     name: "",
     email: "",
     avatar: "",
-    email_verified: false
+    email_verified_at: null
 };
 
 // Initial app state for the reducer
