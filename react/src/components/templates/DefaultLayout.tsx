@@ -6,7 +6,7 @@ import {
    UserIcon,
    ExclamationCircleIcon,
 } from "@heroicons/react/24/outline";
-import { NavLink, Navigate, Outlet } from "react-router-dom";
+import { Link, NavLink, Navigate, Outlet } from "react-router-dom";
 import axios from "axios";
 
 import { useAppHook } from "../../contexts/AppContext";
@@ -14,6 +14,7 @@ import { axiosClient } from "../../api/axios";
 import Notifications from "../molecules/Notifications";
 
 import myAvatar from "../../assets/my avatar.png";
+import { capitalizeFLetter } from "../../utils/reuables";
 
 type NavigationType = { name: string; to: string; current: boolean };
 
@@ -59,7 +60,7 @@ export default function DefaultLayout() {
 
       setTimeout(() => {
          setFetching(false);
-      }, 1000);
+      }, 5000);
 
       return () => {
          source.cancel();
@@ -90,10 +91,6 @@ export default function DefaultLayout() {
       } catch (error) {
          console.log("error");
       }
-   }
-
-   function capitalizeFLetter(word: string): string {
-      return word[0]?.toUpperCase() + word?.slice(1);
    }
 
    const verificationModal = (
@@ -195,11 +192,23 @@ export default function DefaultLayout() {
                                                    onClick={(e) => logout(e)}
                                                    href="#"
                                                    className={
-                                                      "block px-4 py-2 text-sm text-gray-700"
+                                                      "block px-4 py-2 text-sm text-gray-700 hover:bg-slate-400"
                                                    }
                                                 >
                                                    Sign Out
                                                 </a>
+                                             )}
+                                          </Menu.Item>
+                                          <Menu.Item>
+                                             {() => (
+                                                <Link
+                                                   to={'/dashboard/profile'}
+                                                   className={
+                                                      "block px-4 py-2 text-sm text-gray-700 hover:bg-slate-400"
+                                                   }
+                                                >
+                                                   Profile
+                                                </Link>
                                              )}
                                           </Menu.Item>
                                        </Menu.Items>
@@ -269,6 +278,12 @@ export default function DefaultLayout() {
                               >
                                  Sign Out
                               </Disclosure.Button>
+                              <Link
+                                 to={'/dashboard/profile'}
+                                 className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                              >
+                                 Profile
+                              </Link>
                            </div>
                         </div>
                      </Disclosure.Panel>

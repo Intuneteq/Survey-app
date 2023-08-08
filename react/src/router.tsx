@@ -8,12 +8,13 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import Surveys from "./pages/surveys/Surveys";
 import CreateSurvey from "./pages/surveys/CreateSurvey";
 import EditSurvey from "./pages/surveys/EditSurvey";
+import Redirect from "./pages/auth/Redirect";
+import Profile from "./pages/Profile";
 
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Error from "./pages/Error";
 import PublicSurvey from "./pages/surveys/PublicSurvey";
-import Redirect from "./pages/auth/Redirect";
 
 const router = createBrowserRouter([
    {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
          {
             path: "/dashboard",
             element: <Dashboard />,
+         },
+         {
+            path: "/dashboard/profile",
+            element: <Profile />,
          },
          {
             path: "/dashboard/:provider",
