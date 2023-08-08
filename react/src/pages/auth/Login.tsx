@@ -2,21 +2,25 @@ import { FormEvent, MouseEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import { AxiosError } from "axios";
 
-import { ApiError, axiosClient } from "../../api/axios";
 import { useAppHook } from "../../contexts/AppContext";
-import { ErrorObj } from "../../types/auth";
-import showError from "../../utils/errors";
 import FormLayout from "../../components/templates/FormLayout";
+
+import { ErrorObj } from "../../types/auth";
+import { ApiError, axiosClient } from "../../api/axios";
+import showError from "../../utils/errors";
+import Spinner from '../../assets/spinner.gif'
 
 const Login = () => {
    const [email, setEmail] = useState<string>("");
    const [password, setPassword] = useState<string>("");
+   const [loading, setLoading] = useState<boolean>(false);
    const [error, setError] = useState<ErrorObj>({ __html: "" });
 
    const { setToken, setUser } = useAppHook();
 
    const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+      setLoading(true);
       setError({ __html: "" });
 
       const data = { email, password };
@@ -35,6 +39,7 @@ const Login = () => {
 
          console.log(error);
       }
+      setLoading(false)
    };
 
    async function oauthLogin(
@@ -141,7 +146,11 @@ const Login = () => {
                   type="submit"
                   className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                >
-                  Sign in
+                  {loading ? (
+                  <img className="w-6 h-6 mx-2" src={Spinner} alt="spinner" />
+               ) : (
+                 'Sign In'
+               )}
                </button>
             </div>
 

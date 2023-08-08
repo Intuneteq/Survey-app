@@ -112,7 +112,7 @@ export default function DefaultLayout() {
                onClick={resendVerificationEmail}
                className="w-48 h-8 border border-solid border-gray-600 rounded-sm text-sm hover:bg-slate-300"
             >
-               Resend activation
+               Resend Activation
             </button>
          </div>
       </div>

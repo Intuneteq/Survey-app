@@ -9,8 +9,10 @@ import { ErrorObj } from "../../types/auth";
 import showError from "../../utils/errors";
 
 import FormLayout from "../../components/templates/FormLayout";
+import Spinner from "../../assets/spinner.gif";
 
 const Register = () => {
+   const [loading, setLoading] = useState<boolean>(false);
    const [name, setName] = useState<string>("");
    const [email, setEmail] = useState<string>("");
    const [password, setPassword] = useState<string>("");
@@ -22,6 +24,7 @@ const Register = () => {
 
    const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+      setLoading(true);
       setError({ __html: "" });
 
       const data = {
@@ -36,8 +39,7 @@ const Register = () => {
 
          setUser(res.user);
          setToken(res.token);
-         navigate('/dashboard')
-
+         navigate("/dashboard");
       } catch (error: any) {
          const axiosError: AxiosError<ApiError> = error;
 
@@ -47,6 +49,8 @@ const Register = () => {
 
          console.log(error);
       }
+
+      setLoading(false);
    };
 
    async function oAuthRegister(
@@ -171,7 +175,15 @@ const Register = () => {
                   type="submit"
                   className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                >
-                  Sign in
+                  {loading ? (
+                     <img
+                        className="w-6 h-6 mx-2"
+                        src={Spinner}
+                        alt="spinner"
+                     />
+                  ) : (
+                     "Sign Up"
+                  )}
                </button>
             </div>
 
