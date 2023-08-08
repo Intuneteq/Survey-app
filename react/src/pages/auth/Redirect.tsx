@@ -4,6 +4,7 @@ import axios from "axios";
 
 import { useAppHook } from "../../contexts/AppContext";
 import { axiosClient } from "../../api/axios";
+import Spinner from "../../assets/spinner.gif";
 
 const Redirect = () => {
    const [loading, setLoading] = useState(false);
@@ -33,7 +34,7 @@ const Redirect = () => {
                   { cancelToken: source.token }
                );
                setUser(tokenData.data.user);
-               navigate('/login')
+               navigate("/login");
             } catch (error) {
                console.log(error);
             }
@@ -78,16 +79,22 @@ const Redirect = () => {
          login();
       }
 
-      // Cancel token here
       return () => {
-         console.log("unmounting");
-
          source.cancel();
       };
    }, []);
 
-   const isLoading = <p>loading....</p>;
-   const content = <div>Redirecting...</div>;
+   const isLoading = (
+      <div className="flex items-center justify-center">
+         <img className="w-72 h-72" src={Spinner} alt="spinner" />
+      </div>
+   );
+   
+   const content = (
+      <div className="flex items-center justify-center">
+         <img className="w-72 h-72" src={Spinner} alt="spinner" />
+      </div>
+   );
 
    return loading ? isLoading : content;
 };
