@@ -17,7 +17,7 @@ class Answer extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['survey_id', 'start_date', 'end_date'];
+    protected $fillable = ['survey_id', 'answer', 'question_id', 'start_date', 'end_date'];
 
     // Set this if timestamp is not added in migration schema
     const CREATED_AT = null;

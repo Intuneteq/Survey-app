@@ -7,6 +7,7 @@ use App\Exceptions\BadRequestException;
 use App\Models\Answer;
 use App\Http\Requests\StoreAnswerRequest;
 use App\Http\Requests\UpdateAnswerRequest;
+use App\Http\Resources\AnswerResource;
 use App\Mail\MailSurveyAnswer;
 use App\Models\Question;
 use App\Models\Survey;
@@ -24,7 +25,13 @@ class AnswerController extends Controller
 
     public function index(Survey $survey)
     {
-        return $survey;
+        $answer = Answer::where('survey_id', $survey->id)->first();
+
+        // $question = $answer->survey();
+
+        return $answer->question;
+
+        // return new AnswerResource($answer);
     }
 
 
