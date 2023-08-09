@@ -22,9 +22,9 @@ class AnswerController extends Controller
     ) {
     }
 
-    public function index()
+    public function index(Survey $survey)
     {
-        //
+        return $survey;
     }
 
 

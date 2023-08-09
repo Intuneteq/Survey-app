@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Enum;
 use Laravel\Socialite\Facades\Socialite;
@@ -58,12 +60,11 @@ class AuthController extends Controller
         $remember = $credentials['remember'] ?? false;
         unset($credentials['remember']);
 
-        if (!Auth::attempt($credentials, $remember)) {
-            throw new BadRequestException('The Provided credentials are not correct');
-        }
+        $user = User::where('email', $credentials['email'])->first();
 
-        /** @var \App\Models\User $user **/
-        $user = Auth::user();
+        if(!$user || !Hash::check($credentials['password'], $user->password)){
+            throw new BadRequestException('The provided credentials are not correct');
+        }
 
         $token = $user->createToken($this->token_name)->accessToken;
 
@@ -79,7 +80,7 @@ class AuthController extends Controller
         $user = Auth::user();
 
         // Revoke the token that was used to authenticate the current request...
-        $user->token()->delete();
+        $user->token()->revoke();
 
         return response([
             'success' => true
