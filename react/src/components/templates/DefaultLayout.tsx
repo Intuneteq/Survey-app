@@ -6,7 +6,7 @@ import {
    UserIcon,
    ExclamationCircleIcon,
 } from "@heroicons/react/24/outline";
-import { Link, NavLink, Navigate, Outlet } from "react-router-dom";
+import { Link, NavLink, Navigate, Outlet, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { useAppHook } from "../../contexts/AppContext";
@@ -29,6 +29,8 @@ function classNames(...classes: Array<string>) {
 
 export default function DefaultLayout() {
    const [fetching, setFetching] = useState(false);
+   const navigate = useNavigate();
+
    const {
       user,
       setUser,
@@ -73,6 +75,7 @@ export default function DefaultLayout() {
       try {
          await axiosClient.post("/auth/logout", null);
          logOut();
+         navigate('/login')
       } catch (error) {
          console.log(error);
       }
