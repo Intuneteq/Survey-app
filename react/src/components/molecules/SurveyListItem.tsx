@@ -32,9 +32,13 @@ const SurveyListItem = ({ survey, onDeleteClick }: PropsType) => {
                     <PencilIcon className="w-5 h-5 mr-2" />
                     Edit
                 </TButton>
+                <TButton to={`/surveys/${survey.id}`}>
+                <ArrowTopRightOnSquareIcon className="w-5 h-5 mr-2" />
+                    View
+                </TButton>
             </div>
             <div className="flex items-center">
-                <TButton href={`/view/surveys/${survey.slug}`} circle link>
+                <TButton href={`/surveys/${survey.id}`} circle link>
                     <ArrowTopRightOnSquareIcon className="w-5 h-5" />
                 </TButton>
 

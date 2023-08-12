@@ -20,7 +20,7 @@ export type SurveyAnswerType = {
 
 export type DashboardDataType = {
     totalSurveys: number;
-    latestSurveys: SurveyDashboardType;
+    latestSurvey: SurveyDashboardType;
     totalAnswers: number;
     latestAnswers: Array<SurveyAnswerType>;
 }

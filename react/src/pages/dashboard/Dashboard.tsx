@@ -14,22 +14,13 @@ const Dashboard = () => {
    const [loading, setLoading] = useState(false);
    const [data, setData] = useState<Partial<DashboardDataType>>({});
 
-   // const searchParams = new URLSearchParams(document.location.search);
-
    useEffect(() => {
       setLoading(true);
-      // const token = searchParams.get("token");
+ 
       let source = axios.CancelToken.source();
 
       const getData = async () => {
          try {
-            // if (token) {
-            //    const tokenData = await axiosClient.get(
-            //       `/auth/email/verify/${token}`,
-            //       { cancelToken: source.token }
-            //    );
-            //    console.log(tokenData.data);
-            // }
 
             const res = await axiosClient.get("/users/dashboard", {
                cancelToken: source.token,
@@ -46,8 +37,6 @@ const Dashboard = () => {
 
       // Cancel token here
       return () => {
-         console.log("unmounting");
-
          source.cancel();
       };
    }, []);
@@ -89,56 +78,56 @@ const Dashboard = () => {
                   style={{ animationDelay: "0.2s" }}
                >
                   <>
-                     {data.latestSurveys && (
+                     {data.latestSurvey && (
                         <div>
                            <img
-                              src={data.latestSurveys.image_url}
+                              src={data.latestSurvey.image_url}
                               className="w-[240px] mx-auto"
                            />
                            <h3 className="font-bold text-xl mb-3">
-                              {data.latestSurveys.title}
+                              {data.latestSurvey.title}
                            </h3>
                            <div className="flex justify-between text-sm mb-1">
                               <div>Create Date:</div>
-                              <div>{data.latestSurveys.created_at}</div>
+                              <div>{data.latestSurvey.created_at}</div>
                            </div>
                            <div className="flex justify-between text-sm mb-1">
                               <div>Expire Date:</div>
-                              <div>{data.latestSurveys.expire_date}</div>
+                              <div>{data.latestSurvey.expire_date}</div>
                            </div>
                            <div className="flex justify-between text-sm mb-1">
                               <div>Status:</div>
                               <div>
-                                 {data.latestSurveys.status
+                                 {data.latestSurvey.status
                                     ? "Active"
                                     : "Draft"}
                               </div>
                            </div>
                            <div className="flex justify-between text-sm mb-1">
                               <div>Questions:</div>
-                              <div>{data.latestSurveys.questions}</div>
+                              <div>{data.latestSurvey.questions}</div>
                            </div>
                            <div className="flex justify-between text-sm mb-3">
                               <div>Answers:</div>
-                              <div>{data.latestSurveys.answers}</div>
+                              <div>{data.latestSurvey.answers}</div>
                            </div>
                            <div className="flex justify-between">
                               <TButton
-                                 to={`/surveys/${data.latestSurveys.id}/edit`}
+                                 to={`/surveys/${data.latestSurvey.id}/edit`}
                                  link
                               >
                                  <PencilIcon className="w-5 h-5 mr-2" />
                                  Edit Survey
                               </TButton>
 
-                              <TButton link>
+                              <TButton link to={`/surveys/${data.latestSurvey.id}`}>
                                  <EyeIcon className="w-5 h-5 mr-2" />
                                  View Answers
                               </TButton>
                            </div>
                         </div>
                      )}
-                     {!data.latestSurveys && (
+                     {!data.latestSurvey && (
                         <div className="text-gray-600 text-center py-16">
                            Your don't have surveys yet
                         </div>

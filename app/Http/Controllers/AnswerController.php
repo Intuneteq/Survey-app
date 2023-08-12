@@ -25,13 +25,9 @@ class AnswerController extends Controller
 
     public function index(Survey $survey)
     {
-        $answer = Answer::where('survey_id', $survey->id)->first();
+        $answer = Answer::where('survey_id', $survey->id)->get();
 
-        // $question = $answer->survey();
-
-        return $answer->question;
-
-        // return new AnswerResource($answer);
+        return AnswerResource::collection($answer);
     }
 
 
