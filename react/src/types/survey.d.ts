@@ -1,21 +1,26 @@
 export type OptionsType = {
     uuid: string;
     text: string;
-}
+};
 
 export type QuestionDataType = {
-    options: Array<OptionsType> | []
-}
+    options: Array<OptionsType> | [];
+};
 
-export type QuestionListType = "text" | "checkbox" | "select" | "radio" | "textarea";
+export type QuestionListType =
+    | "text"
+    | "checkbox"
+    | "select"
+    | "radio"
+    | "textarea";
 
 export type QuestionType = {
     id: number | string;
     type: QuestionListType;
     question: string;
     description: string;
-    data: QuestionDataType,
-}
+    data: QuestionDataType;
+};
 
 export type Survey = {
     id: number;
@@ -27,7 +32,7 @@ export type Survey = {
     created_at: Date;
     updated_at: Date;
     expire_date: Date | string;
-    questions: Array<QuestionType>
+    questions: Array<QuestionType>;
 };
 
 export type SurveyType = Partial<Survey> & {
@@ -49,3 +54,18 @@ export type MetaType = {
     per_page: number;
     links: Array<LinkType>;
 };
+
+export type Answer = {
+    id: string;
+    survey_id: string;
+    question_id: string;
+    answer: string;
+    start_date: string;
+    end_date: string;
+};
+
+export type FetchQuestionType = Array<
+    Partial<QuestionType> & {
+        answers: Array<Answer>;
+    }
+>;

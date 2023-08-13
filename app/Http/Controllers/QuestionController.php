@@ -5,15 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Question;
 use App\Http\Requests\StoreQuestionRequest;
 use App\Http\Requests\UpdateQuestionRequest;
+use App\Http\Resources\QuestionResource;
+use App\Models\Survey;
 
 class QuestionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Survey $survey)
     {
-        //
+        $questions = Question::query()->where('survey_id', $survey->id)->get();
+
+        return QuestionResource::collection($questions);
     }
 
     /**

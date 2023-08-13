@@ -29,7 +29,7 @@ class SurveyController extends Controller
     }
 
     public function store(StoreSurveyRequest $request)
-    {
+    { 
         $data = $request->validated();
 
         $survey = $this->repository->create($data);
