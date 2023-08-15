@@ -1,16 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+<x-mail::message>
+# Hi {{$name}},
 
-    <div>
-        title: {{$surveyTitle}}
-        description: {{$surveyDescription}}
-    </div>
+<p>You got an answer for your survey</p>
+<small>click on the button below to view the latest answer to your survey</small>
 
-</body>
-</html>
+<x-mail::button :url="$url" color="success">
+Verify
+</x-mail::button>
+
+Thanks,<br>
+Tobi Olanitori, <br>
+{{ config('app.name') }}
+</x-mail::message>
