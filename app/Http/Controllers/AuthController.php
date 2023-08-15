@@ -155,9 +155,8 @@ class AuthController extends Controller
                     'user_id' => $foundUser->id
                 ]);
             }
-
-            Auth::login($foundUser);
-            $user = Auth::user();
+            
+            $user = $foundUser;
         }
 
         $token = $user->createToken($this->token_name)->accessToken;

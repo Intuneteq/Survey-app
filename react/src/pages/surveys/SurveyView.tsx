@@ -45,6 +45,22 @@ const SurveyView = () => {
       }
    }
 
+   function showAnswer(data: string, index: number) {
+      const parsed = JSON.parse(data);
+
+      if (Array.isArray(parsed)) {
+         return (
+            <>
+               <p>
+                  {index}: {parsed}
+               </p>
+            </>
+         );
+      } else {
+         return <p>{parsed}</p>;
+      }
+   }
+
    useEffect(() => {
       setLoading(true);
 
@@ -72,33 +88,46 @@ const SurveyView = () => {
    const loadingContent = <p>Loading...</p>;
 
    const content = (
-      <>
-         <div className="mt-1 flex items-center">
+      <div className="p-4">
+         <div className="mt-1 flex items-end justify-center gap-3">
             <img
                className="w-48 h-48 object-cover"
                src={survey?.image_url}
                alt="img"
             />
+            <section>
+               <h3 className="text-2xl">
+                  <b>Title:</b> {survey?.title}
+               </h3>
+               <p className="text-xl">
+                  <b>Description:</b> {survey?.description}
+               </p>
+            </section>
          </div>
-         <h3>{survey?.title}</h3>
-         <p>{survey?.description}</p>
-         <h4>Questions</h4>
-         <div>
+         <h4 className="text-3xl mt-20 mb-5 font-bold">Questions</h4>
+         <>
             {questions?.map((question) => (
-               <div key={question.id}>
-                  {question.answers.map((answer) => (
+               <div className="mb-2" key={question.id}>
+                  <article>
+                     <h6>Title: {question.question}</h6>
+                     <p>Description: {question.description}</p>
+                     <h6 className="font-semibold">Answers</h6>
+                  </article>
+                  {question.answers.map((answer, index) => (
                      <div key={answer.id}>
-                        <p>
-                           {testJSON(answer.answer)
-                              ? JSON.parse(answer.answer)
-                              : answer.answer}
-                        </p>
+                        {testJSON(answer.answer) ? (
+                           showAnswer(answer.answer, index + 1)
+                        ) : (
+                           <p>
+                              {index + 1}: {answer.answer}
+                           </p>
+                        )}
                      </div>
                   ))}
                </div>
             ))}
-         </div>
-      </>
+         </>
+      </div>
    );
 
    return loading ? loadingContent : content;
