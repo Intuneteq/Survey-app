@@ -1,5 +1,3 @@
-// import { registerUser } from "./pages/auth/api/auth";
-
 type User = {
     name: string;
     email: string;
@@ -14,6 +12,10 @@ type RegisterUser = {
     confirm_password: string;
 };
 
+type LoginUser = {
+    email: string;
+    password: string;
+};
 
 interface ApiError {
     errors: Array<string[]>;
@@ -24,7 +26,7 @@ interface ApiError {
 type RegisterResult = {
     user?: string;
     token?: string;
-    error?: AxiosError<ApiError>
-}
+    error?: AxiosError<ApiError>;
+};
 
 type ErrorObj = { __html: string };

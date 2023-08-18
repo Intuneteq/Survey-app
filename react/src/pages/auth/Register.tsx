@@ -15,7 +15,7 @@ import showError from "../../utils/errors";
 import FormLayout from "../../components/templates/FormLayout";
 import Spinner from "../../assets/spinner.gif";
 
-import { registerUser } from "./api/auth";
+import { registerUser } from "./lib/auth";
 
 export async function action({ request }: ActionFunctionArgs) {
    const formData = await request.formData();

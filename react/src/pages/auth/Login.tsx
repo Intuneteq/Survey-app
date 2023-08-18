@@ -1,46 +1,59 @@
-import { FormEvent, MouseEvent, useState } from "react";
-import { Link } from "react-router-dom";
-import { AxiosError } from "axios";
+import { MouseEvent, useEffect, useState } from "react";
+import {
+   Link,
+   Form,
+   ActionFunctionArgs,
+   useActionData,
+} from "react-router-dom";
 
 import { useAppHook } from "../../contexts/AppContext";
 import FormLayout from "../../components/templates/FormLayout";
 
-import { ErrorObj } from "../../types/auth";
-import { ApiError, axiosClient } from "../../api/axios";
+import { axiosClient } from "../../api/axios";
 import showError from "../../utils/errors";
-import Spinner from '../../assets/spinner.gif'
+import { loginUser } from "./lib/auth";
+
+import Spinner from "../../assets/spinner.gif";
+
+export async function action({ request }: ActionFunctionArgs) {
+   const formData = await request.formData();
+
+   const data = Object.fromEntries(formData);
+
+   const { error, user, token } = await loginUser(data as LoginUser);
+
+   return { error, user, token };
+}
 
 const Login = () => {
-   const [email, setEmail] = useState<string>("");
-   const [password, setPassword] = useState<string>("");
    const [loading, setLoading] = useState<boolean>(false);
-   const [error, setError] = useState<ErrorObj>({ __html: "" });
+
+   const actionData = useActionData();
 
    const { setToken, setUser } = useAppHook();
 
-   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      setLoading(true);
-      setError({ __html: "" });
+   let error = { __html: "" };
 
-      const data = { email, password };
+   if (actionData) {
+      const result = actionData as RegisterResult;
 
-      try {
-         const { data: res } = await axiosClient.post("/auth/login", data);
-
-         setUser(res.user);
-         setToken(res.token);
-      } catch (error: any) {
-         const axiosError: AxiosError<ApiError> = error;
-
+      if (result.error) {
+         const axiosError = result.error;
          if (axiosError.response) {
-            setError(showError(axiosError.response));
+            error = showError(axiosError.response);
          }
-
-         console.log(error);
+         console.log(result.error);
       }
-      setLoading(false)
-   };
+
+      if (result.token) {
+         setUser(result.user);
+         setToken(result.token);
+      }
+   }
+
+   useEffect(() => {
+      setLoading(false);
+   }, [actionData]);
 
    async function oauthLogin(
       e: MouseEvent<HTMLButtonElement>,
@@ -67,10 +80,8 @@ const Login = () => {
                dangerouslySetInnerHTML={error}
             ></div>
          )}
-         <form
-            onSubmit={onSubmit}
+         <Form
             className="space-y-6 bg-white p-10 shadow-lg rounded-lg w-full"
-            action="#"
             method="POST"
          >
             <div>
@@ -85,9 +96,8 @@ const Login = () => {
                      id="email"
                      name="email"
                      type="email"
+                     aria-label="email"
                      autoComplete="email"
-                     value={email}
-                     onChange={(e) => setEmail(e.target.value)}
                      required
                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
@@ -116,9 +126,8 @@ const Login = () => {
                      id="password"
                      name="password"
                      type="password"
+                     aria-label="password"
                      autoComplete="current-password"
-                     value={password}
-                     onChange={(e) => setPassword(e.target.value)}
                      required
                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
@@ -144,13 +153,18 @@ const Login = () => {
             <div>
                <button
                   type="submit"
+                  onClick={() => setLoading(true)}
                   className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                >
                   {loading ? (
-                  <img className="w-6 h-6 mx-2" src={Spinner} alt="spinner" />
-               ) : (
-                 'Sign In'
-               )}
+                     <img
+                        className="w-6 h-6 mx-2"
+                        src={Spinner}
+                        alt="spinner"
+                     />
+                  ) : (
+                     "Sign In"
+                  )}
                </button>
             </div>
 
@@ -186,7 +200,7 @@ const Login = () => {
                   Github
                </button>
             </div>
-         </form>
+         </Form>
 
          <p className="mt-10 text-center text-sm text-gray-500">
             You don't have an account?{" "}

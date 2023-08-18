@@ -11,14 +11,12 @@ import EditSurvey from "./pages/surveys/EditSurvey";
 import Redirect from "./pages/auth/Redirect";
 import Profile from "./pages/Profile";
 
-import Login from "./pages/auth/Login";
+import Login, { action as loginAction} from "./pages/auth/Login";
 import Register, { action as registerAction} from "./pages/auth/Register";
 import Error from "./pages/Error";
 import PublicSurvey from "./pages/surveys/PublicSurvey";
 import SurveyView from "./pages/surveys/SurveyView";
 
-// Actions
-// import {}
 
 const router = createBrowserRouter([
    {
@@ -71,6 +69,7 @@ const router = createBrowserRouter([
          {
             path: "/login",
             element: <Login />,
+            action: loginAction
          },
          {
             path: "/register",
@@ -90,10 +89,6 @@ const router = createBrowserRouter([
       path: "/surveys/public/:slug",
       element: <PublicSurvey />,
    },
-   // {
-   //    path: "/*",
-   //    element: <Error />,
-   // },
 ]);
 
 export default router;
