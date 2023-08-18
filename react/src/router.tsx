@@ -21,6 +21,7 @@ const router = createBrowserRouter([
    {
       path: "/",
       element: <DefaultLayout />,
+      errorElement: <Error />,
       children: [
          {
             path: "/",
@@ -49,6 +50,8 @@ const router = createBrowserRouter([
          {
             path: "/surveys/:id",
             element: <SurveyView />,
+            
+            errorElement: <Error />,
             // loader: async () => {},
          },
          {
@@ -82,10 +85,10 @@ const router = createBrowserRouter([
       path: "/surveys/public/:slug",
       element: <PublicSurvey />,
    },
-   {
-      path: "/*",
-      element: <Error />,
-   },
+   // {
+   //    path: "/*",
+   //    element: <Error />,
+   // },
 ]);
 
 export default router;
