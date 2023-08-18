@@ -11,17 +11,31 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class EmailVerification extends Mailable
+class EmailVerification extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(protected User $user,)
+    public function __construct(protected User $user)
     {
-        //
+        $this->afterCommit();
     }
+
+    /**
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries = 5;
+
+    /**
+     * Indicate if the job should be marked as failed on timeout.
+     *
+     * @var bool
+     */
+    public $failOnTimeout = true;
 
     /**
      * Get the message envelope.
@@ -32,6 +46,11 @@ class EmailVerification extends Mailable
             from: new Address('tobiolanitori@gmail.com', 'Survey App'),
             subject: 'Email Verification',
         );
+    }
+
+    public function handle()
+    {
+        $user = $this->user;
     }
 
     /**
