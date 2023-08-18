@@ -30,9 +30,9 @@ export async function action({ request }: ActionFunctionArgs) {
 const Register = () => {
    const [loading, setLoading] = useState<boolean>(false);
    const actionData =  useActionData();
+   const navigate = useNavigate();
 
    const { setToken, setUser } = useAppHook();
-   const navigate = useNavigate();
 
    let error = { __html: "" };
 

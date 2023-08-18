@@ -13,7 +13,7 @@ const GuestLayout = () => {
 
    return (
       <div className="bg-gray-200 h-full min-h-screen w-full p-10">
-         <div className="w-full">
+         <div className="w-full flex justify-center items-center">
             <div className="w-16 h-16 rounded-full bg-white sm:mx-auto p-2">
                <img
                   className="w-full h-full object-contain"
