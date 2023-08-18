@@ -1,20 +1,20 @@
-export type OptionsType = {
+type OptionsType = {
     uuid: string;
     text: string;
 };
 
-export type QuestionDataType = {
+type QuestionDataType = {
     options: Array<OptionsType> | [];
 };
 
-export type QuestionListType =
+type QuestionListType =
     | "text"
     | "checkbox"
     | "select"
     | "radio"
     | "textarea";
 
-export type QuestionType = {
+type QuestionType = {
     id: number | string;
     type: QuestionListType;
     question: string;
@@ -22,7 +22,7 @@ export type QuestionType = {
     data: QuestionDataType;
 };
 
-export type Survey = {
+type Survey = {
     id: number;
     image_url: string;
     title: string;
@@ -35,17 +35,17 @@ export type Survey = {
     questions: Array<QuestionType>;
 };
 
-export type SurveyType = Partial<Survey> & {
+type SurveyType = Partial<Survey> & {
     image?: globalThis.File | string;
 };
 
-export type LinkType = {
+type LinkType = {
     active: boolean;
     label: string;
     url: string;
 };
 
-export type MetaType = {
+type MetaType = {
     current_page: number;
     from: number;
     last_page: number;
@@ -55,7 +55,7 @@ export type MetaType = {
     links: Array<LinkType>;
 };
 
-export type Answer = {
+type Answer = {
     id: string;
     survey_id: string;
     question_id: string;
@@ -64,7 +64,7 @@ export type Answer = {
     end_date: string;
 };
 
-export type FetchQuestionType = Array<
+type FetchQuestionType = Array<
     Partial<QuestionType> & {
         answers: Array<Answer>;
     }

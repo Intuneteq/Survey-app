@@ -4,12 +4,6 @@ import axios, {
     InternalAxiosRequestConfig,
 } from "axios";
 
-export interface ApiError {
-    errors: Array<string[]>;
-    error: string;
-    message: string;
-}
-
 export const axiosClient = axios.create({
     baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`,
 });

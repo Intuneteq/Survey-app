@@ -1,8 +1,5 @@
 import { AxiosResponse } from "axios";
 
-import { ApiError } from "../api/axios";
-import { ErrorObj } from "../types/auth";
-
 const showError = (error: AxiosResponse<ApiError>): ErrorObj => {
     if (error.data.errors) {
         const errors = Object.values(error.data.errors);

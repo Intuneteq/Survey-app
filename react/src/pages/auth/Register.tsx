@@ -1,57 +1,63 @@
-import { FormEvent, useState, MouseEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { AxiosError } from "axios";
+import { useState, MouseEvent, useEffect } from "react";
+import {
+   Link,
+   Form,
+   ActionFunctionArgs,
+   useActionData,
+   useNavigate,
+} from "react-router-dom";
 
-import { ApiError, axiosClient } from "../../api/axios";
+import { axiosClient } from "../../api/axios";
 import { useAppHook } from "../../contexts/AppContext";
 
-import { ErrorObj } from "../../types/auth";
 import showError from "../../utils/errors";
 
 import FormLayout from "../../components/templates/FormLayout";
 import Spinner from "../../assets/spinner.gif";
 
+import { registerUser } from "./api/auth";
+
+export async function action({ request }: ActionFunctionArgs) {
+   const formData = await request.formData();
+
+   const data = Object.fromEntries(formData);
+
+   const { error, user, token } = await registerUser(data as RegisterUser);
+
+   return { error, user, token };
+}
+
 const Register = () => {
    const [loading, setLoading] = useState<boolean>(false);
-   const [name, setName] = useState<string>("");
-   const [email, setEmail] = useState<string>("");
-   const [password, setPassword] = useState<string>("");
-   const [confirmPassword, setConfirmPassword] = useState<string>("");
-   const [error, setError] = useState<ErrorObj>({ __html: "" });
+   const actionData =  useActionData();
 
    const { setToken, setUser } = useAppHook();
    const navigate = useNavigate();
 
-   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      setLoading(true);
-      setError({ __html: "" });
+   let error = { __html: "" };
 
-      const data = {
-         name,
-         email,
-         password,
-         password_confirmation: confirmPassword,
-      };
+   if (actionData) {
+      const result = actionData as RegisterResult;
 
-      try {
-         const { data: res } = await axiosClient.post("/auth/register", data);
-
-         setUser(res.user);
-         setToken(res.token);
-         navigate("/dashboard");
-      } catch (error: any) {
-         const axiosError: AxiosError<ApiError> = error;
-
+      if(result.error) {
+         const axiosError = result.error;
          if (axiosError.response) {
-            setError(showError(axiosError.response));
+            error = showError(axiosError.response);
          }
-
-         console.log(error);
+         console.log(result.error);
       }
 
+      if (result.token) {
+         setUser(result.user);
+         setToken(result.token);
+         navigate("/dashboard");
+      }
+   }
+
+
+   useEffect(() => {
       setLoading(false);
-   };
+   }, [actionData]);
 
    async function oAuthRegister(
       e: MouseEvent<HTMLButtonElement>,
@@ -78,10 +84,8 @@ const Register = () => {
                dangerouslySetInnerHTML={error}
             ></div>
          )}
-         <form
-            onSubmit={onSubmit}
+         <Form
             className="space-y-6 bg-white p-10 shadow-lg rounded-lg w-full"
-            action="#"
             method="POST"
          >
             <div>
@@ -96,9 +100,8 @@ const Register = () => {
                      id="name"
                      name="name"
                      type="text"
+                     aria-label="name"
                      required
-                     value={name}
-                     onChange={(e) => setName(e.target.value)}
                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                </div>
@@ -116,9 +119,8 @@ const Register = () => {
                      id="email"
                      name="email"
                      type="email"
-                     value={email}
-                     onChange={(e) => setEmail(e.target.value)}
                      autoComplete="email"
+                     aria-label="email"
                      required
                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
@@ -139,8 +141,7 @@ const Register = () => {
                      id="password"
                      name="password"
                      type="password"
-                     value={password}
-                     onChange={(e) => setPassword(e.target.value)}
+                     aria-label="password"
                      autoComplete="current-password"
                      required
                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -161,9 +162,8 @@ const Register = () => {
                   <input
                      id="confirm_password"
                      name="confirm_password"
+                     aria-label="Confirm Password"
                      type="password"
-                     value={confirmPassword}
-                     onChange={(e) => setConfirmPassword(e.target.value)}
                      required
                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
@@ -172,6 +172,7 @@ const Register = () => {
 
             <div>
                <button
+                  onClick={() => setLoading(true)}
                   type="submit"
                   className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                >
@@ -219,7 +220,7 @@ const Register = () => {
                   Github
                </button>
             </div>
-         </form>
+         </Form>
 
          <p className="mt-10 text-center text-sm text-gray-500">
             Already have an account?{" "}

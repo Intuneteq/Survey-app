@@ -5,7 +5,6 @@ import {
    useContext,
    useReducer,
 } from "react";
-import { QuestionType, SurveyType } from "../types/survey";
 
 export const surveyInitState: SurveyType = {
    title: "",
