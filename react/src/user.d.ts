@@ -1,6 +1,4 @@
-import { SurveyType } from './survey'
-
-export type SurveyDashboardType = {
+type SurveyDashboardType = {
     id: number;
     image_url: string;
     title: string;
@@ -12,13 +10,13 @@ export type SurveyDashboardType = {
     answers: number
 }
 
-export type SurveyAnswerType = {
+type SurveyAnswerType = {
     id: number,
     survey: SurveyType,
     end_date: string;
 }
 
-export type DashboardDataType = {
+type DashboardDataType = {
     totalSurveys: number;
     latestSurvey: SurveyDashboardType;
     totalAnswers: number;

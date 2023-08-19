@@ -1,6 +1,3 @@
-// import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
-
-import { LinkType, MetaType } from "../../types/survey";
 import { paginationClass } from "../../utils/classes";
 
 type PropsType = {

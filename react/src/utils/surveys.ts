@@ -1,5 +1,4 @@
 import { axiosClient } from "../api/axios";
-import { SurveyType, MetaType, Survey } from "../types/survey";
 import { CancelToken } from "axios";
 
 type ChildrenType = {

@@ -3,8 +3,6 @@ import { TrashIcon } from "@heroicons/react/24/outline";
 
 import { useSurveyHook } from "../../contexts/SurveyContext";
 
-import { OptionsType, QuestionType } from "../../types/survey";
-
 type PropsType = { data: OptionsType; index: number; question: QuestionType };
 
 const SelectBoxInput = ({ data, index, question }: PropsType) => {

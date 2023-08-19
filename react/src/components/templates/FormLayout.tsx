@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 
-// import React from 'react'
 type Proptypes = { title: string; children: ReactNode };
 
 const FormLayout = ({ title, children }: Proptypes) => {

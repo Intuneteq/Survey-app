@@ -3,14 +3,11 @@ import { LinkIcon, PhotoIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 
-import { ErrorObj } from "../../types/auth";
-import { SurveyType } from "../../types/survey";
-
 import PageComponent from "./PageComponent";
 import SurveyQuestions from "../molecules/SurveyQuestions";
 import TButton, { Colors } from "../atoms/TButton";
 
-import { ApiError, axiosClient } from "../../api/axios";
+import { axiosClient } from "../../api/axios";
 
 import showError from "../../utils/errors";
 import getSurveys from "../../utils/surveys";

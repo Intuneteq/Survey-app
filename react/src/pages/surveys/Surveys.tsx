@@ -8,7 +8,6 @@ import PaginationLinks from "../../components/organisms/PaginationLinks";
 import SurveySkeleton from "../../components/skeletons/SurveySkeleton";
 
 import { useAppHook } from "../../contexts/AppContext";
-import { LinkType, MetaType, Survey } from "../../types/survey";
 
 import getSurveys from "../../utils/surveys";
 import { axiosClient } from "../../api/axios";

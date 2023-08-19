@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import { QuestionType } from "../../types/survey";
 import { useSurveyHook } from "../../contexts/SurveyContext";
 import { useParams } from "react-router-dom";
 

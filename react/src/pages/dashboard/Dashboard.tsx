@@ -7,7 +7,6 @@ import PageComponent from "../../components/organisms/PageComponent";
 import DashboardCard from "../../components/molecules/DashboardCard";
 
 import { axiosClient } from "../../api/axios";
-import { DashboardDataType } from "../../types/user";
 import SurveySkeleton from "../../components/skeletons/SurveySkeleton";
 
 const Dashboard = () => {

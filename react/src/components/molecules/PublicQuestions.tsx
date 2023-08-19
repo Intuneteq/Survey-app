@@ -1,6 +1,3 @@
-// import React from 'react'
-
-import { OptionsType, QuestionType } from "../../types/survey";
 
 type PropsType = {
    question: QuestionType;

@@ -1,5 +1,3 @@
-import { LinkType, MetaType } from "../types/survey";
-
 export function paginationClass(link: LinkType, ind: number, meta: MetaType) {
     const all = [
         "relative",

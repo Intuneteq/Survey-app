@@ -6,8 +6,6 @@ import {
 
 import TButton, { Colors } from "../atoms/TButton";
 
-import { Survey } from "../../types/survey";
-
 type PropsType = {
     survey: Survey;
     onDeleteClick: (id: number) => void;

@@ -2,12 +2,6 @@ import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 
-import {
-   OptionsType,
-   QuestionListType,
-   QuestionType,
-} from "../../types/survey";
-
 import SelectBoxInput from "../atoms/SelectBoxInput";
 
 import { useSurveyHook } from "../../contexts/SurveyContext";

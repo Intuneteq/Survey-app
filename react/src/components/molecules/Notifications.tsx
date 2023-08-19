@@ -1,5 +1,3 @@
-// import React from 'react'
-
 import { useAppHook } from "../../contexts/AppContext";
 
 const Notifications = () => {

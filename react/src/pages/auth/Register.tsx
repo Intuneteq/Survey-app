@@ -48,7 +48,7 @@ const Register = () => {
       }
 
       if (result.token) {
-         setUser(result.user);
+         setUser(result.user as User);
          setToken(result.token);
          navigate("/dashboard");
       }

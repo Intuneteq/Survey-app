@@ -6,9 +6,6 @@ import {
     ReactElement,
 } from "react";
 
-import { QuestionListType, Survey } from "../types/survey";
-import { User } from "../types/auth";
-
 export type Notification = {
     message?: string;
     show?: boolean;

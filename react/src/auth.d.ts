@@ -24,7 +24,7 @@ interface ApiError {
 }
 
 type RegisterResult = {
-    user?: string;
+    user?: User;
     token?: string;
     error?: AxiosError<ApiError>;
 };

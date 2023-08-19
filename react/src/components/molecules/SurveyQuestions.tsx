@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from "uuid";
 
 import QuestionEditor from "../organisms/QuestionEditor";
 
-import { QuestionType } from "../../types/survey";
 import { useSurveyHook } from "../../contexts/SurveyContext";
 
 const SurveyQuestions = () => {
