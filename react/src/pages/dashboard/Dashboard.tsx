@@ -1,57 +1,27 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import useSWR from "swr";
 import { EyeIcon, PencilIcon } from "@heroicons/react/24/outline";
 
 import TButton from "../../components/atoms/TButton";
 import PageComponent from "../../components/organisms/PageComponent";
 import DashboardCard from "../../components/molecules/DashboardCard";
+import DashboardSkeleton from "../../components/skeletons/DashboardSkeleton";
 
-import { axiosClient } from "../../api/axios";
-import SurveySkeleton from "../../components/skeletons/SurveySkeleton";
+import { getDashboardData, dashboardEndpoint as cacheKey } from "./lib";
+
 
 const Dashboard = () => {
-   const [loading, setLoading] = useState(false);
-   const [data, setData] = useState<Partial<DashboardDataType>>({});
+   const { isLoading, error, data } = useSWR(cacheKey, getDashboardData);
 
-   useEffect(() => {
-      setLoading(true);
- 
-      let source = axios.CancelToken.source();
-
-      const getData = async () => {
-         try {
-
-            const res = await axiosClient.get("/users/dashboard", {
-               cancelToken: source.token,
-            });
-
-            setData(res.data);
-         } catch (error) {
-            console.log(error);
-         }
-         setLoading(false);
-      };
-
-      getData();
-
-      // Cancel token here
-      return () => {
-         source.cancel();
-      };
-   }, []);
-
-   const loadingContent = (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-         {[...Array(3).keys()].map((i) => {
-            return <SurveySkeleton key={i} />;
-         })}
-      </div>
-   );
-
-   return (
-      <PageComponent title="Dashboard">
-         {loading && loadingContent}
-         {!loading && (
+   let content;
+   if (isLoading) {
+      content = <DashboardSkeleton />;
+   } else if (error) {
+      throw new Error(error.message);
+   } else if (!data) {
+      throw new Error('No data from Server')
+   } else {
+      content = (
+         <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 text-gray-700">
                <DashboardCard
                   title="Total Surveys"
@@ -97,9 +67,7 @@ const Dashboard = () => {
                            <div className="flex justify-between text-sm mb-1">
                               <div>Status:</div>
                               <div>
-                                 {data.latestSurvey.status
-                                    ? "Active"
-                                    : "Draft"}
+                                 {data.latestSurvey.status ? "Active" : "Draft"}
                               </div>
                            </div>
                            <div className="flex justify-between text-sm mb-1">
@@ -119,7 +87,10 @@ const Dashboard = () => {
                                  Edit Survey
                               </TButton>
 
-                              <TButton link to={`/surveys/${data.latestSurvey.id}`}>
+                              <TButton
+                                 link
+                                 to={`/surveys/${data.latestSurvey.id}`}
+                              >
                                  <EyeIcon className="w-5 h-5 mr-2" />
                                  View Answers
                               </TButton>
@@ -168,9 +139,11 @@ const Dashboard = () => {
                   </>
                </DashboardCard>
             </div>
-         )}
-      </PageComponent>
-   );
+         </>
+      );
+   }
+
+   return <PageComponent title="Dashboard">{content}</PageComponent>;
 };
 
 export default Dashboard;
