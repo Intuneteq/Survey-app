@@ -17,8 +17,9 @@ import {
 const Surveys = () => {
    const { isLoading, error, data } = useSWR(cacheKey, getSurveys);
 
+   let content;
    if (isLoading) {
-      return (
+      content = (
          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
             {[...Array(6).keys()].map((i) => {
                return <SurveySkeleton key={i} />;
@@ -29,33 +30,36 @@ const Surveys = () => {
       throw new Error(error.message);
    } else if (!data) {
       throw new Error("No data from the server");
-   }
-
-   const content = (
-      <>
-         {!data.surveys.length ? (
-            <p className="py-8 text-center text-gray-700">
-               {" "}
-               You have no surveys yet
-            </p>
-         ) : (
-            <>
-               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
-                  {data.surveys.map((survey: Survey) => (
-                     <SurveyListItem
-                        key={survey.id}
-                        survey={survey}
-                        onDeleteClick={onDeleteClick}
+   } else {
+      content = (
+         <>
+            {!data.surveys.length ? (
+               <p className="py-8 text-center text-gray-700">
+                  {" "}
+                  You have no surveys yet
+               </p>
+            ) : (
+               <>
+                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
+                     {data.surveys.map((survey: Survey) => (
+                        <SurveyListItem
+                           key={survey.id}
+                           survey={survey}
+                           onDeleteClick={onDeleteClick}
+                        />
+                     ))}
+                  </div>
+                  {data.surveys.length > 0 && (
+                     <PaginationLinks
+                        meta={data.meta}
+                        onPageClick={onPageClick}
                      />
-                  ))}
-               </div>
-               {data.surveys.length > 0 && (
-                  <PaginationLinks meta={data.meta} onPageClick={onPageClick} />
-               )}
-            </>
-         )}
-      </>
-   );
+                  )}
+               </>
+            )}
+         </>
+      );
+   }
 
    const createBtn = (
       <TButton color={Colors.GREEN} to="/surveys/create">

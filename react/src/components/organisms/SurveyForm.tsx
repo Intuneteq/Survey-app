@@ -64,7 +64,6 @@ const SurveyForm = ({ title, method, id }: SurveyForm) => {
       setError({ __html: "" });
 
       const data = { ...survey };
-      console.log(data);
 
       if (data.image) {
          data.image = data.image_url as string;
