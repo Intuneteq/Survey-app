@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import useSWR from "swr";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 
 import TButton, { Colors } from "../../components/atoms/TButton";
@@ -7,56 +7,33 @@ import PageComponent from "../../components/organisms/PageComponent";
 import PaginationLinks from "../../components/organisms/PaginationLinks";
 import SurveySkeleton from "../../components/skeletons/SurveySkeleton";
 
-import { useAppHook } from "../../contexts/AppContext";
-
-import getSurveys from "../../utils/surveys";
-import { axiosClient } from "../../api/axios";
+import {
+   getSurveys,
+   surveyUrlEndpoint as cacheKey,
+   deleteSurvey as onDeleteClick,
+   onPageClick,
+} from "./lib";
 
 const Surveys = () => {
-   const { surveys, setSurvey, showNotification } = useAppHook();
+   const { isLoading, error, data } = useSWR(cacheKey, getSurveys);
 
-   const [loading, setLoading] = useState(false);
-   const [meta, setMeta] = useState<MetaType>({
-      current_page: 1,
-      to: 1,
-      from: 1,
-      total: 1,
-      last_page: 1,
-      per_page: 1,
-      links: [],
-   });
-
-   const onDeleteClick = async (id: number) => {
-      if (window.confirm("Are you sure yo want to delete this survey")) {
-         try {
-            await axiosClient.delete(`surveys/${id}`);
-            getSurveys({ url: undefined, setLoading, setMeta, setSurvey });
-            showNotification("The survey was deleted");
-         } catch (error) {
-            console.log(error);
-         }
-      }
-   };
-
-   const onPageClick = (link: LinkType) => {
-      getSurveys({ url: link.url, setLoading, setMeta, setSurvey });
-   };
-
-   useEffect(() => {
-      getSurveys({ url: undefined, setLoading, setMeta, setSurvey });
-   }, []);
-
-   const loadingContent = (
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
-         {[...Array(6).keys()].map((i) => {
-            return <SurveySkeleton key={i} />;
-         })}
-      </div>
-   );
+   if (isLoading) {
+      return (
+         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
+            {[...Array(6).keys()].map((i) => {
+               return <SurveySkeleton key={i} />;
+            })}
+         </div>
+      );
+   } else if (error) {
+      throw new Error(error.message);
+   } else if (!data) {
+      throw new Error("No data from the server");
+   }
 
    const content = (
       <>
-         {!surveys.length ? (
+         {!data.surveys.length ? (
             <p className="py-8 text-center text-gray-700">
                {" "}
                You have no surveys yet
@@ -64,7 +41,7 @@ const Surveys = () => {
          ) : (
             <>
                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
-                  {surveys.map((survey: Survey) => (
+                  {data.surveys.map((survey: Survey) => (
                      <SurveyListItem
                         key={survey.id}
                         survey={survey}
@@ -72,8 +49,8 @@ const Surveys = () => {
                      />
                   ))}
                </div>
-               {surveys.length > 0 && (
-                  <PaginationLinks meta={meta} onPageClick={onPageClick} />
+               {data.surveys.length > 0 && (
+                  <PaginationLinks meta={data.meta} onPageClick={onPageClick} />
                )}
             </>
          )}
@@ -89,7 +66,7 @@ const Surveys = () => {
 
    return (
       <PageComponent title="Surveys" buttons={createBtn}>
-         {loading ? loadingContent : content}
+         {content}
       </PageComponent>
    );
 };
