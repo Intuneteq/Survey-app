@@ -1,6 +1,8 @@
 import useSWR from "swr";
 import { useParams } from "react-router-dom";
+
 import { getQuestions, getSurvey } from "./lib";
+import { testJSON } from "../../utils/reuables";
 
 const SurveyView = () => {
    const { id } = useParams();
@@ -67,18 +69,6 @@ const SurveyView = () => {
             </>
          </div>
       );
-   }
-
-   function testJSON(text: any) {
-      if (typeof text !== "string") {
-         return false;
-      }
-      try {
-         JSON.parse(text);
-         return true;
-      } catch (error) {
-         return false;
-      }
    }
 
    function showAnswer(data: string, index: number) {
