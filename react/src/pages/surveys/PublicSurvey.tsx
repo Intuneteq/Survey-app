@@ -6,7 +6,6 @@ import getSurvey from "../../utils/surveys";
 import PublicQuestions from "../../components/molecules/PublicQuestions";
 import TButton from "../../components/atoms/TButton";
 
-import { QuestionType, SurveyType } from "../../types/survey";
 import { axiosClient } from "../../api/axios";
 
 const PublicSurvey = () => {
