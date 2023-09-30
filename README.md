@@ -8,7 +8,7 @@ I've built upon the foundation of the original project and introduced several en
 
 ### Backend (Laravel)
 
-- Implemented Laravel Passport and Socialite for authentication and authorization.
+- Implemented Laravel Sanctum and Socialite for authentication and authorization.
 - Integrated Google and GitHub OAuth2.0 for seamless third-party authentication.
 - Implemented email verification using queued events sent out after user registration.
 - Implemented email notification using queued events to notify survey owners of new answers to survey.
