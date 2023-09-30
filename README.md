@@ -32,7 +32,7 @@ I've built upon the foundation of the original project and introduced several en
 
 ## Features
 
-- Laravel Passport and Socialite integration for authentication.
+- Laravel Sanctum and Socialite integration for authentication.
 - Google and GitHub OAuth2.0 for third-party login.
 - Email verification using queued events for user registration.
 - Amazon S3 storage for handling user profile pictures.
